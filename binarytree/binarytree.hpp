@@ -1,9 +1,8 @@
 //
-// Created by 17602 on 2024/2/28.
+// Created by wyx on 2024/2/28.
+// 二叉树
 //
-
-#ifndef MYSTL_BINARYTREE_HPP
-#define MYSTL_BINARYTREE_HPP
+#pragma once
 
 #include <iostream>
 #include <memory>
@@ -62,7 +61,7 @@ namespace mystd
     {
         // 第一次添加
         if (root == nullptr) {
-            root = std::make_shared<TreeNode<T>>(value, std::shared_ptr<TreeNode<T>>(nullptr));
+            root = std::make_shared<TreeNode<T>>(value, root);
             m_size++;
             return;
         }
@@ -236,6 +235,4 @@ namespace mystd
 
         return wp.lock()->parent.lock();
     }
-}
-
-#endif //MYSTL_BINARYTREE_HPP
+} // mystd

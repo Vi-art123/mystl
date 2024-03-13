@@ -1,10 +1,12 @@
 //
-// Created by 17602 on 2024/3/12.
+// Created by wyx on 2024/3/12.
+// 单向链表
 //
 #pragma once
 
 #include <iostream>
 #include <memory>
+#include <List.hpp>
 
 namespace mystd
 {
@@ -31,9 +33,12 @@ namespace mystd
         void set(int index, const T& element) override;
         int index_of(const T& element) const override;
         void to_string() const;
+        void reverse();
 
     private:
         std::shared_ptr<Node<T>> get_node(int index) const;
+
+        std::shared_ptr<Node<T>> reverse_list(std::shared_ptr<Node<T>> node);
     private:
         std::shared_ptr<Node<T>> head = nullptr;
 
@@ -65,8 +70,10 @@ namespace mystd
     }
 
     template<typename T>
-    void LinkedList<T>::remove(int index)
+    inline void LinkedList<T>::remove(int index)
     {
+        check_index(index);
+
         if (index == 0) {
             head = head->next;
         } else {
@@ -79,15 +86,13 @@ namespace mystd
     template<typename T>
     inline T LinkedList<T>::get(int index) const
     {
-        auto node = get_node(index);
-        return node->value;
+        return get_node(index)->value;
     }
 
     template<typename T>
     inline void LinkedList<T>::set(int index, const T &element)
     {
-        auto node = get_node(index);
-        node->value = element;
+        get_node(index)->value = element;
     }
 
     template<typename T>
@@ -113,6 +118,47 @@ namespace mystd
         }
 
         return node;
+    }
+
+    template<typename T>
+    void LinkedList<T>::reverse()
+    {
+        head = reverse_list(head);
+    }
+
+//    /**
+//     * 链表反转，递归方式
+//     * @tparam T
+//     * @param node
+//     * @return
+//     */
+//    template<typename T>
+//    std::shared_ptr<Node<T>> LinkedList<T>::reverse_list(std::shared_ptr<Node<T>> node)
+//    {
+//        if (node == nullptr || node->next == nullptr) return node;
+//        auto new_head = reverse_list(node->next);
+//        node->next->next = node;
+//        node->next = nullptr;
+//        return new_head;
+//    }
+
+    /**
+     * 链表反转，遍历方式
+     * @tparam T
+     * @param node
+     * @return
+     */
+    template<typename T>
+    std::shared_ptr<Node<T>> LinkedList<T>::reverse_list(std::shared_ptr<Node<T>> node)
+    {
+        std::shared_ptr<Node<T>> new_head = nullptr;
+        while (node != nullptr) {
+            auto tmp = node->next;
+            node->next = new_head;
+            new_head = node;
+            node = tmp;
+        }
+        return new_head;
     }
 
     template<typename T>

@@ -3,6 +3,8 @@
 //
 #pragma once
 
+#include <stdexcept>
+
 namespace mystd
 {
     template<typename T>
@@ -42,4 +44,4 @@ namespace mystd
         static constexpr int ELEMENT_NOT_FOUND = -1;
         int m_size = 0;
     };
-}
+} // mystd

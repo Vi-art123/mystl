@@ -53,6 +53,7 @@ void test03()
 //    ll.pop_back();
 //    ll.set(8, 6);
 //    ll.add(8, 6);
+//    ll.reverse();
     ll.to_string();
 //    std::cout << ll.get(9) << std::endl;
 }

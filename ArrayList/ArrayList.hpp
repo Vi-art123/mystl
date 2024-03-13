@@ -1,5 +1,6 @@
 //
-// Created by 17602 on 2024/3/10.
+// Created by wyx on 2024/3/10.
+// 动态数组
 //
 #pragma once
 #include <List.hpp>
@@ -50,6 +51,10 @@ namespace mystd
     };
 
 
+    /**
+     * 动态扩容
+     * @tparam T
+     */
     template<typename T>
     inline void ArrayList<T>::ensure_capacity()
     {
@@ -124,4 +129,4 @@ namespace mystd
         }
         std::cout << "}" << std::endl;
     }
-}
+} // mystd
