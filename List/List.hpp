@@ -16,8 +16,7 @@ namespace mystd
         virtual ~List() = default;
         List(const List&) = default;
         List(List&&) = default;
-        List& operator=(const List&) = default;
-        List& operator=(List&&) = default;
+//        List& operator=(List&&) = default;
 
         virtual void add(int index, const T& element) = 0;
         virtual void remove(int index) = 0;
@@ -51,8 +50,4 @@ namespace mystd
         static constexpr int ELEMENT_NOT_FOUND = -1;
         int m_size = 0;
     };
-
-    // 建议：即使一个常量静态数据成员在类内部被初始化了，通常情况下也应该在类的外部定义一下该成员。
-    template<typename T>
-    constexpr int List<T>::ELEMENT_NOT_FOUND;
 } // mystd

@@ -12,7 +12,7 @@ namespace mystd
     {
     public:
         ArrayList() : ArrayList(DEFAULT_CAPACITY) {}
-        explicit ArrayList(const int& capacity)
+        explicit ArrayList(int capacity)
         {
             m_capacity = (capacity < DEFAULT_CAPACITY) ? DEFAULT_CAPACITY : capacity;
             m_arr = new T[m_capacity];
@@ -25,41 +25,40 @@ namespace mystd
 
         ArrayList(const ArrayList& ary) : List<T>(ary), m_capacity(ary.m_capacity)
         {
-            // if (m_arr != nullptr) delete m_arr;  // 如果不加这一句会不会内存泄漏？
             m_arr = new T[m_capacity];
             for (int i = 0; i < m_size; i++) {
                 m_arr[i] = ary.m_arr[i];
             }
         }
 
-        ArrayList(ArrayList&& ary) : List<T>(ary), m_capacity(ary.m_capacity), m_arr(ary.m_arr)
+        ArrayList(ArrayList&& ary) noexcept : List<T>(std::move(ary)), m_capacity(ary.m_capacity), m_arr(ary.m_arr)
         {
             ary.m_arr = nullptr;
             ary.m_size = 0;
             ary.m_capacity = DEFAULT_CAPACITY;
         }
 
-        ArrayList& operator=(const ArrayList& ary)
+        ArrayList& operator=(const ArrayList& ary) noexcept
         {
-            List<T>::operator=(ary);
-            m_capacity = ary.m_capacity;
-            if (m_arr != nullptr) delete m_arr;  // 如果不加这一句会不会内存泄漏？
-            m_arr = new T[m_capacity];
-            for (int i = 0; i < m_size; i++) {
-                m_arr[i] = ary.m_arr[i];
-            }
+            // 先拷贝一个临时对象，再交换到当前对象，避免自我赋值和异常
+            ArrayList(ary).swap(*this);
             return *this;
         }
 
-        ArrayList& operator=(ArrayList&& ary)
+        ArrayList& operator=(ArrayList&& ary) noexcept
         {
-            List<T>::operator=(ary);
+#if 0
+            List<T>::operator=(std::move(ary));
             m_capacity = ary.m_capacity;
             m_arr = ary.m_arr;
-            
+
             ary.m_arr = nullptr;
             ary.m_size = 0;
             ary.m_capacity = DEFAULT_CAPACITY;
+#endif
+            // 使用上面注释掉的也可以正常赋值，和下面这个相比哪个效率高？
+            // 先移动到一个临时对象，再交换到当前对象
+            ArrayList(std::move(ary)).swap(*this);  // 这里的交换效率高吗？
             return *this;
         }
 
@@ -75,6 +74,7 @@ namespace mystd
     private:
         [[nodiscard]] int free_space() const noexcept { return m_capacity - m_size; }
         void ensure_capacity();
+        void swap(ArrayList& ary) noexcept;
 
     private:
         static constexpr int DEFAULT_CAPACITY = 10;
@@ -87,10 +87,13 @@ namespace mystd
         using List<T>::ELEMENT_NOT_FOUND;
     };
 
-    // 建议：即使一个常量静态数据成员在类内部被初始化了，通常情况下也应该在类的外部定义一下该成员。
     template<typename T>
-    constexpr int ArrayList<T>::DEFAULT_CAPACITY;
-
+    inline void ArrayList<T>::swap(ArrayList &ary) noexcept
+    {
+        std::swap(m_arr, ary.m_arr);
+        std::swap(m_size, ary.m_size);
+        std::swap(m_capacity, ary.m_capacity);
+    }
 
     /**
      * 动态扩容
