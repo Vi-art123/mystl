@@ -26,9 +26,6 @@ namespace mystd
     class BinaryTree
     {
     public:
-        BinaryTree() = default;
-        ~BinaryTree() { clear(); }
-
         void add(const T& value);
         void clear();
         void preOrderTraverse();

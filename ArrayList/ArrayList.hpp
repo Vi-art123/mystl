@@ -20,15 +20,11 @@ namespace mystd
 
         ~ArrayList()
         {
-            m_size = 0;
             delete[] m_arr;
-            m_arr = nullptr;
-            m_capacity = 0;
         }
 
-        ArrayList(const ArrayList& ary) : m_capacity(ary.m_capacity)
+        ArrayList(const ArrayList& ary) : List<T>(ary), m_capacity(ary.m_capacity)
         {
-            m_size = ary.m_size;
             // if (m_arr != nullptr) delete m_arr;  // 如果不加这一句会不会内存泄漏？
             m_arr = new T[m_capacity];
             for (int i = 0; i < m_size; i++) {
@@ -36,18 +32,17 @@ namespace mystd
             }
         }
 
-        ArrayList(ArrayList&& ary) : m_capacity(ary.m_capacity), m_arr(ary.m_arr)
+        ArrayList(ArrayList&& ary) : List<T>(ary), m_capacity(ary.m_capacity), m_arr(ary.m_arr)
         {
-            m_size = ary.m_size;
             ary.m_arr = nullptr;
             ary.m_size = 0;
             ary.m_capacity = DEFAULT_CAPACITY;
         }
 
-        ArrayList& operator=(ArrayList& ary)
+        ArrayList& operator=(const ArrayList& ary)
         {
-            m_size = ary.m_size;
-            m_capacity = m_capacity;
+            List<T>::operator=(ary);
+            m_capacity = ary.m_capacity;
             if (m_arr != nullptr) delete m_arr;  // 如果不加这一句会不会内存泄漏？
             m_arr = new T[m_capacity];
             for (int i = 0; i < m_size; i++) {
@@ -58,7 +53,7 @@ namespace mystd
 
         ArrayList& operator=(ArrayList&& ary)
         {
-            m_size = ary.m_size;
+            List<T>::operator=(ary);
             m_capacity = ary.m_capacity;
             m_arr = ary.m_arr;
             
@@ -91,6 +86,10 @@ namespace mystd
         using List<T>::check_add_index;
         using List<T>::ELEMENT_NOT_FOUND;
     };
+
+    // 建议：即使一个常量静态数据成员在类内部被初始化了，通常情况下也应该在类的外部定义一下该成员。
+    template<typename T>
+    constexpr int ArrayList<T>::DEFAULT_CAPACITY;
 
 
     /**
