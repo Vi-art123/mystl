@@ -26,6 +26,48 @@ namespace mystd
             m_capacity = 0;
         }
 
+        ArrayList(const ArrayList& ary) : m_capacity(ary.m_capacity)
+        {
+            m_size = ary.m_size;
+            // if (m_arr != nullptr) delete m_arr;  // 如果不加这一句会不会内存泄漏？
+            m_arr = new T[m_capacity];
+            for (int i = 0; i < m_size; i++) {
+                m_arr[i] = ary.m_arr[i];
+            }
+        }
+
+        ArrayList(ArrayList&& ary) : m_capacity(ary.m_capacity), m_arr(ary.m_arr)
+        {
+            m_size = ary.m_size;
+            ary.m_arr = nullptr;
+            ary.m_size = 0;
+            ary.m_capacity = DEFAULT_CAPACITY;
+        }
+
+        ArrayList& operator=(ArrayList& ary)
+        {
+            m_size = ary.m_size;
+            m_capacity = m_capacity;
+            if (m_arr != nullptr) delete m_arr;  // 如果不加这一句会不会内存泄漏？
+            m_arr = new T[m_capacity];
+            for (int i = 0; i < m_size; i++) {
+                m_arr[i] = ary.m_arr[i];
+            }
+            return *this;
+        }
+
+        ArrayList& operator=(ArrayList&& ary)
+        {
+            m_size = ary.m_size;
+            m_capacity = ary.m_capacity;
+            m_arr = ary.m_arr;
+            
+            ary.m_arr = nullptr;
+            ary.m_size = 0;
+            ary.m_capacity = DEFAULT_CAPACITY;
+            return *this;
+        }
+
         void add(int index, const T& element) override;
         void remove(int index) override;
         void clear() noexcept override { m_size = 0; }
@@ -69,7 +111,7 @@ namespace mystd
     }
 
     template<typename T>
-    void ArrayList<T>::add(int index, const T &element)
+    void ArrayList<T>::add(int index, const T& element)
     {
         check_add_index(index);
 

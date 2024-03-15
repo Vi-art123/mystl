@@ -1,5 +1,6 @@
 //
-// Created by 17602 on 2024/3/11.
+// Created by wyx on 2024/3/11.
+// 线性表基类
 //
 #pragma once
 

@@ -18,7 +18,7 @@ namespace mystd
         std::shared_ptr<TreeNode> left;
         std::shared_ptr<TreeNode> right;
         TreeNode(const T& val, std::weak_ptr<TreeNode> p) : value(val), parent(p) {}
-        ~TreeNode() { std::cout << "delete TreeNode: " << value << std::endl; }
+        // ~TreeNode() { std::cout << "delete TreeNode: " << value << std::endl; }
     };
 
 
@@ -92,7 +92,7 @@ namespace mystd
     }
 
     template<class T>
-    inline int BinaryTree<T>::compare(const T &v1, const T &v2)
+    inline int BinaryTree<T>::compare(const T& v1, const T& v2)
     {
         return v1 - v2;
     }

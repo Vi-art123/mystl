@@ -23,9 +23,6 @@ namespace mystd
     class LinkedList : public List<T>
     {
     public:
-        LinkedList() = default;
-        ~LinkedList() { clear(); }
-
         void add(int index, const T& element) override;
         void remove(int index) override;
         void clear() override;
@@ -56,7 +53,7 @@ namespace mystd
     }
 
     template<typename T>
-    inline void LinkedList<T>::add(int index, const T &element)
+    inline void LinkedList<T>::add(int index, const T& element)
     {
         check_add_index(index);
 
@@ -90,13 +87,13 @@ namespace mystd
     }
 
     template<typename T>
-    inline void LinkedList<T>::set(int index, const T &element)
+    inline void LinkedList<T>::set(int index, const T& element)
     {
         get_node(index)->value = element;
     }
 
     template<typename T>
-    inline int LinkedList<T>::index_of(const T &element) const
+    inline int LinkedList<T>::index_of(const T& element) const
     {
         auto node = head;
         for (int i = 0; i < m_size; i++) {
