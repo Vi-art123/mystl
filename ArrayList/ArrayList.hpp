@@ -26,7 +26,7 @@ namespace mystd
         ArrayList(const ArrayList& ary) : List<T>(ary), m_capacity(ary.m_capacity)
         {
             m_arr = new T[m_capacity];
-            for (int i = 0; i < m_size; i++) {
+            for (int i = 0; i < this->m_size; i++) {
                 m_arr[i] = ary.m_arr[i];
             }
         }
@@ -64,7 +64,7 @@ namespace mystd
 
         void add(int index, const T& element) override;
         void remove(int index) override;
-        void clear() noexcept override { m_size = 0; }
+        void clear() noexcept override { this->m_size = 0; }
         T get(int index) const override;
         void set(int index, const T& element) override;
         int capacity() noexcept { return m_capacity; }
@@ -72,7 +72,7 @@ namespace mystd
         void to_string() const;
 
     private:
-        [[nodiscard]] int free_space() const noexcept { return m_capacity - m_size; }
+        [[nodiscard]] int free_space() const noexcept { return m_capacity - this->m_size; }
         void ensure_capacity();
         void swap(ArrayList& ary) noexcept;
 
@@ -80,18 +80,13 @@ namespace mystd
         static constexpr int DEFAULT_CAPACITY = 10;
         int m_capacity = DEFAULT_CAPACITY;
         T *m_arr = nullptr;
-
-        using List<T>::m_size;
-        using List<T>::check_index;
-        using List<T>::check_add_index;
-        using List<T>::ELEMENT_NOT_FOUND;
     };
 
     template<typename T>
     inline void ArrayList<T>::swap(ArrayList &ary) noexcept
     {
         std::swap(m_arr, ary.m_arr);
-        std::swap(m_size, ary.m_size);
+        std::swap(this->m_size, ary.m_size);
         std::swap(m_capacity, ary.m_capacity);
     }
 
@@ -105,7 +100,7 @@ namespace mystd
         if (free_space() > 0) return;
         m_capacity += (m_capacity >> 1);
         T* new_arr = new T[m_capacity];
-        for (int i = 0; i < m_size; i++) {
+        for (int i = 0; i < this->m_size; i++) {
             new_arr[i] = m_arr[i];
         }
         delete[] m_arr;
@@ -115,61 +110,61 @@ namespace mystd
     template<typename T>
     void ArrayList<T>::add(int index, const T& element)
     {
-        check_add_index(index);
+        this->check_add_index(index);
 
         ensure_capacity();
 
-        for (int i = m_size - 1 ; i >= index; i--) {
+        for (int i = this->m_size - 1 ; i >= index; i--) {
             m_arr[i + 1] = m_arr[i];
         }
         m_arr[index] = element;
-        m_size++;
+        this->m_size++;
     }
 
     template<typename T>
     void ArrayList<T>::remove(int index)
     {
-        check_index(index);
+        this->check_index(index);
 
-        for (int i = index + 1; i < m_size - 1; i++) {
+        for (int i = index + 1; i < this->m_size - 1; i++) {
             m_arr[i - 1] = m_arr[i];
         }
-        m_size--;
+        this->m_size--;
     }
 
     template<typename T>
     inline int ArrayList<T>::index_of(const T& element) const
     {
-        for (int i = 0; i < m_size; i++) {
+        for (int i = 0; i < this->m_size; i++) {
             if (m_arr[i] == element) return i;
         }
 
-        return ELEMENT_NOT_FOUND;
+        return this->ELEMENT_NOT_FOUND;
     }
 
 
     template<typename T>
     inline T ArrayList<T>::get(int index) const
     {
-        check_index(index);
+        this->check_index(index);
         return m_arr[index];
     }
 
     template<typename T>
     inline void ArrayList<T>::set(int index, const T& element)
     {
-        check_index(index);
+        this->check_index(index);
         m_arr[index] = element;
     }
 
     template<typename T>
     void ArrayList<T>::to_string() const
     {
-        std::cout << "size:" << m_size << " ";
+        std::cout << "size:" << this->m_size << " ";
         std::cout << "{";
-        for (int i = 0; i < m_size; i++) {
+        for (int i = 0; i < this->m_size; i++) {
             std::cout << m_arr[i];
-            if (i != m_size - 1) std::cout << ", ";
+            if (i != this->m_size - 1) std::cout << ", ";
         }
         std::cout << "}" << std::endl;
     }
