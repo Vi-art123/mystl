@@ -11,6 +11,8 @@ include_directories(${PROJECT_SOURCE_DIR}/binarytree)
 include_directories(${PROJECT_SOURCE_DIR}/List)
 include_directories(${PROJECT_SOURCE_DIR}/ArrayList)
 include_directories(${PROJECT_SOURCE_DIR}/LinkedList)
+include_directories(${PROJECT_SOURCE_DIR}/Stack)
+include_directories(${PROJECT_SOURCE_DIR}/Queue)
 
 # 添加一个可执行文件
 add_executable(mystl main.cpp)
