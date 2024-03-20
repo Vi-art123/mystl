@@ -1,4 +1,4 @@
-#include <binarytree.hpp>
+#include <BinaryTree.hpp>
 #include <ArrayList.hpp>
 #include <LinkedList.hpp>
 #include <CircleLinkedList.hpp>
@@ -6,6 +6,7 @@
 #include <SinglyCircleLinkedList.hpp>
 #include <Stack.hpp>
 #include <Queue.hpp>
+#include <Deque.hpp>
 
 
 void test01()
@@ -55,6 +56,11 @@ void test03()
         ll.push_back(arr[i]);
     }
 
+    {
+        decltype(ll) list = ll;
+        ll.to_string();
+    }
+
 //    ll.pop_back();
 //    ll.set(8, 6);
 //    ll.add(8, 6);
@@ -96,6 +102,6 @@ void test05()
 
 int main()
 {
-    test03();
+    test01();
     return 0;
 }
