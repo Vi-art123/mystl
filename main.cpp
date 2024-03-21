@@ -12,7 +12,8 @@
 void test01()
 {
     mystd::BST<int> bst;
-    int arr[] = {7, 9, 4, 2, 5, 8, 11, 1, 3, 10, 12};
+    // int arr[] = {7, 9, 4, 2, 5, 8, 11, 1, 3, 10, 12};
+    int arr[] = {7, 9, 4, 2, 5, 8, 11, 1, 3};
     int len = sizeof arr/sizeof arr[0];
     for (int i = 0; i < len; ++i) {
         bst.add(arr[i]);
@@ -37,6 +38,16 @@ void test01()
 
     std::cout << "height=" << bst.height2() << std::endl;
     std::cout << "height=" << bst.height() << std::endl;
+    if (bst.isComplete()) {
+        std::cout << "is complete binary tree." << std::endl;
+    } else {
+        std::cout << "is not complete binary tree." << std::endl;
+    }
+
+    bst.to_string();
+
+    bst.invertTree();
+    bst.to_string();
 }
 
 void test02()

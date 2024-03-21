@@ -6,10 +6,32 @@
 
 #include <iostream>
 #include <queue>
-#include "TreeNode.h"
+#include <memory>
 
 namespace mystd
 {
+    template<typename T>
+    struct TreeNode
+    {
+        T value;
+        std::weak_ptr<TreeNode> parent;
+        std::shared_ptr<TreeNode> left;
+        std::shared_ptr<TreeNode> right;
+        TreeNode(const T& val, std::weak_ptr<TreeNode> p) : value(val), parent(p) {}
+//         ~TreeNode() { std::cout << "delete TreeNode: " << value << std::endl; }
+
+        bool hasTwoChildren()
+        {
+            return (left != nullptr && right != nullptr);
+        }
+
+        bool isLeaf()
+        {
+            return (left == nullptr && right == nullptr);
+        }
+    };
+
+
     template<typename T>
     class BinaryTree
     {
@@ -24,6 +46,9 @@ namespace mystd
         void inOrderTraverse();
         void postOrderTraverse();
         void levelOrderTraverse();
+        void invertTree();
+        void to_string() const;
+        [[nodiscard]] bool isComplete() const;
         [[nodiscard]] int height() const;
         [[nodiscard]] int height2() const { return height2(root); };
         [[nodiscard]] int size() const noexcept { return m_size; }
@@ -130,6 +155,35 @@ namespace mystd
     }
 
     /**
+     * 翻转二叉树，把所有节点的左右子树交换（可以使用前序，后续，中序，层序遍历实现）
+     * @return 
+     */    
+    template<typename T>
+    void BinaryTree<T>::invertTree()
+    {
+        if (root == nullptr) return;
+        std::queue<decltype(root)> qp;
+        qp.push(root);
+        while (!qp.empty())
+        {
+            auto node = qp.front();
+            qp.pop();
+
+            auto tmpNode = node->left;
+            node->left = node->right;
+            node->right = tmpNode;
+
+            if (node->left != nullptr) {
+                qp.push(node->left);
+            }
+
+            if (node->right != nullptr) {
+                qp.push(node->right);
+            }
+        }
+    }
+
+    /**
      * 层序遍历方式
      * @return 
      */    
@@ -173,6 +227,45 @@ namespace mystd
     {
         if (node == nullptr) return 0;
         return 1 + std::max(height2(node->left), height2(node->right));
+    }
+
+    /**
+     * 判断是否为完全二叉树
+     * @return 
+     */    
+    template<typename T>
+    bool BinaryTree<T>::isComplete() const
+    {
+        if (root == nullptr) return false;
+        
+        std::queue<decltype(root)> qp;
+        qp.push(root);
+
+        bool leaf = false;
+        while (!qp.empty())
+        {
+            auto node = qp.front();
+            qp.pop();
+
+            if (leaf && !node->isLeaf())
+                return false;
+
+            if (node->left != nullptr) {
+                qp.push(node->left);
+            } else if (node->right != nullptr) {
+                // 左边为空，但是右边不为空
+                return false;
+            }
+
+            if (node->right != nullptr) {
+                qp.push(node->right);
+            } else {
+                // 只要右边为空，后面的节点都必须是叶子节点才是完全二叉树
+                leaf = true;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -232,5 +325,39 @@ namespace mystd
         }
 
         return node->parent.lock();
+    }
+
+    template<typename T>
+    void BinaryTree<T>::to_string() const
+    {
+        if (root == nullptr) return;
+
+        int height__ = height();
+        int levelRowSize = 1;  // 每一层的元素个数
+        std::queue<decltype(root)> qp;
+        qp.push(root);
+        while (!qp.empty())
+        {
+            auto node = qp.front();
+            qp.pop();
+
+            levelRowSize--;
+            
+            std::cout << node->value << " ";
+
+            if (node->left != nullptr) {
+                qp.push(node->left);
+            }
+
+            if (node->right != nullptr) {
+                qp.push(node->right);
+            }
+
+            if (levelRowSize == 0) {    // 意味着即将进入下一层
+                std::cout << std::endl;
+                levelRowSize = qp.size();
+                height__--;
+            }
+        }
     }
 } // mystd
