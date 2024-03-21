@@ -1,4 +1,4 @@
-#include <BST.hpp>
+#include <AVLTree.hpp>
 #include <ArrayList.hpp>
 #include <LinkedList.hpp>
 #include <CircleLinkedList.hpp>
@@ -11,9 +11,10 @@
 
 void test01()
 {
-    mystd::BST<int> bst;
+    mystd::AVLTree<int> bst;
     // int arr[] = {7, 9, 4, 2, 5, 8, 11, 1, 3, 10, 12};
-    int arr[] = {7, 9, 4, 2, 5, 8, 11, 1, 3};
+//    int arr[] = {7, 9, 4, 2, 5, 8, 11, 1, 3};
+    int arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
     int len = sizeof arr/sizeof arr[0];
     for (int i = 0; i < len; ++i) {
         bst.add(arr[i]);
@@ -46,8 +47,8 @@ void test01()
 
     bst.to_string();
 
-    bst.invertTree();
-    bst.to_string();
+//    bst.invertTree();
+//    bst.to_string();
 }
 
 void test02()

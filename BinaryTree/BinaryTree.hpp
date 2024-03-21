@@ -17,17 +17,31 @@ namespace mystd
         std::weak_ptr<TreeNode> parent;
         std::shared_ptr<TreeNode> left;
         std::shared_ptr<TreeNode> right;
+        TreeNode() = default;
+        TreeNode(const TreeNode& node) = default;
+        TreeNode(TreeNode&& node) = default;
         TreeNode(const T& val, std::weak_ptr<TreeNode> p) : value(val), parent(p) {}
-//         ~TreeNode() { std::cout << "delete TreeNode: " << value << std::endl; }
+//        virtual ~TreeNode() { std::cout << "delete TreeNode: " << value << std::endl; }
+        virtual ~TreeNode() = default;
 
-        bool hasTwoChildren()
+        [[nodiscard]] bool hasTwoChildren() const
         {
             return (left != nullptr && right != nullptr);
         }
 
-        bool isLeaf()
+        [[nodiscard]] bool isLeaf() const
         {
             return (left == nullptr && right == nullptr);
+        }
+
+        [[nodiscard]] bool isLeft() const
+        {
+            return (parent.lock() && this == parent.lock()->left.get());
+        }
+
+        [[nodiscard]] bool isRight() const
+        {
+            return (parent.lock() && this == parent.lock()->right.get());
         }
     };
 
@@ -56,6 +70,7 @@ namespace mystd
     protected:
         std::shared_ptr<TreeNode<T>> predecessor(std::shared_ptr<TreeNode<T>> node);
         std::shared_ptr<TreeNode<T>> successor(std::shared_ptr<TreeNode<T>> node);
+        virtual std::shared_ptr<TreeNode<T>> createNode(const T& value, std::shared_ptr<TreeNode<T>> parent);
     private:
         int height2(std::shared_ptr<TreeNode<T>> node) const;
         virtual void preOrderTraverse(std::shared_ptr<TreeNode<T>> node);
@@ -71,6 +86,12 @@ namespace mystd
     {
         root = nullptr; // 自动释放内存
         m_size = 0;
+    }
+
+    template<typename T>
+    inline std::shared_ptr<TreeNode<T>> BinaryTree<T>::createNode(const T& value, std::shared_ptr<TreeNode<T>> parent)
+    {
+        return std::make_shared<TreeNode<T>>(value, parent);
     }
 
     /**
@@ -191,7 +212,7 @@ namespace mystd
     int BinaryTree<T>::height() const
     {
         if (root == nullptr) return 0;
-        int height__ = 0;   // 树的高度
+        int height_ = 0;   // 树的高度
         int levelRowSize = 1;  // 每一层的元素个数
         std::queue<decltype(root)> qp;
         qp.push(root);
@@ -211,10 +232,10 @@ namespace mystd
 
             if (levelRowSize == 0) {    // 意味着即将进入下一层
                 levelRowSize = qp.size();
-                height__++;
+                height_++;
             }
         }
-        return height__;
+        return height_;
     }
 
     /**
@@ -332,7 +353,6 @@ namespace mystd
     {
         if (root == nullptr) return;
 
-        int height__ = height();
         int levelRowSize = 1;  // 每一层的元素个数
         std::queue<decltype(root)> qp;
         qp.push(root);
@@ -356,7 +376,6 @@ namespace mystd
             if (levelRowSize == 0) {    // 意味着即将进入下一层
                 std::cout << std::endl;
                 levelRowSize = qp.size();
-                height__--;
             }
         }
     }

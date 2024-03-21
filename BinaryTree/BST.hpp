@@ -19,6 +19,7 @@ namespace mystd
         int compare(const T& v1, const T& v2);
         std::shared_ptr<TreeNode<T>> get_node(const T& value);
         void remove(std::shared_ptr<TreeNode<T>> node);
+        virtual void afterAdd(std::shared_ptr<TreeNode<T>> node) {}
     };
 
     template<typename T>
@@ -26,8 +27,10 @@ namespace mystd
     {
         // 第一次添加
         if (this->root == nullptr) {
-            this->root = std::make_shared<TreeNode<T>>(value, this->root);
+            this->root = this->createNode(value, this->root);
             this->m_size++;
+            // 新添加节点之后的处理
+            afterAdd(this->root);
             return;
         }
 
@@ -47,13 +50,16 @@ namespace mystd
             }
         }
 
-        auto new_node = std::make_shared<TreeNode<T>>(value, parent);
+        auto new_node = this->createNode(value, parent);
         if (cmp > 0) {
             parent->left = new_node;
         } else {
             parent->right = new_node;
         }
         this->m_size++;
+
+        // 新添加节点之后的处理
+        afterAdd(new_node);
     }
 
     template<typename T>
