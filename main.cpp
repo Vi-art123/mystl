@@ -1,4 +1,4 @@
-#include <BinaryTree.hpp>
+#include <BST.hpp>
 #include <ArrayList.hpp>
 #include <LinkedList.hpp>
 #include <CircleLinkedList.hpp>
@@ -11,24 +11,32 @@
 
 void test01()
 {
-    mystd::BinaryTree<int> bt;
+    mystd::BST<int> bst;
     int arr[] = {7, 9, 4, 2, 5, 8, 11, 1, 3, 10, 12};
     int len = sizeof arr/sizeof arr[0];
     for (int i = 0; i < len; ++i) {
-        bt.add(arr[i]);
+        bst.add(arr[i]);
     }
 
-    if (!bt.isEmpty()) {
-        bt.preOrderTraverse();
+    if (!bst.isEmpty()) {
+        bst.preOrderTraverse();
         std::cout << std::endl;
-        bt.inOrderTraverse();
+        bst.inOrderTraverse();
         std::cout << std::endl;
-        bt.postOrderTraverse();
+        bst.postOrderTraverse();
         std::cout << std::endl;
-        bt.levelOrderTraverse();
+        bst.levelOrderTraverse();
     }
 
-    std::cout << std::endl << bt.size() << std::endl;
+    std::cout << std::endl << "size=" << bst.size() << std::endl;
+
+    int a = 8;
+    if (bst.contains(a)) {
+        std::cout << "contains " << a << std::endl;
+    }
+
+    std::cout << "height=" << bst.height2() << std::endl;
+    std::cout << "height=" << bst.height() << std::endl;
 }
 
 void test02()
