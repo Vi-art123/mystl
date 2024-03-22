@@ -74,6 +74,7 @@ namespace mystd
     private:
         [[nodiscard]] int free_space() const noexcept { return m_capacity - this->m_size; }
         void ensure_capacity();
+        void trim_capacity();
         void swap(ArrayList& ary) noexcept;
 
     private:
@@ -92,13 +93,31 @@ namespace mystd
 
     /**
      * 动态扩容
-     * @tparam T
      */
     template<typename T>
     inline void ArrayList<T>::ensure_capacity()
     {
         if (free_space() > 0) return;
         m_capacity += (m_capacity >> 1);
+        T* new_arr = new T[m_capacity];
+        for (int i = 0; i < this->m_size; i++) {
+            new_arr[i] = m_arr[i];
+        }
+        delete[] m_arr;
+        m_arr = new_arr;
+    }
+
+    /**
+     * 动态缩容
+     */    
+    template<typename T>
+    void ArrayList<T>::trim_capacity()
+    {
+        if (this->m_size >= (m_capacity >> 1) 
+            && m_capacity <= DEFAULT_CAPACITY)
+            return;
+
+        m_capacity >>= 1;
         T* new_arr = new T[m_capacity];
         for (int i = 0; i < this->m_size; i++) {
             new_arr[i] = m_arr[i];
@@ -126,10 +145,13 @@ namespace mystd
     {
         this->check_index(index);
 
-        for (int i = index + 1; i < this->m_size - 1; i++) {
-            m_arr[i - 1] = m_arr[i];
+        for (int i = index; i < this->m_size - 1; i++) {
+            m_arr[i] = m_arr[i + 1];
         }
         this->m_size--;
+
+        // 缩容
+        trim_capacity();
     }
 
     template<typename T>
