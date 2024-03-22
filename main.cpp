@@ -1,6 +1,4 @@
 #include <AVLTree.hpp>
-#include <ArrayList.hpp>
-#include <LinkedList.hpp>
 #include <CircleLinkedList.hpp>
 #include <SinglyLinkedList.hpp>
 #include <SinglyCircleLinkedList.hpp>
@@ -18,34 +16,20 @@ void test01()
     int len = sizeof arr/sizeof arr[0];
     for (int i = 0; i < len; ++i) {
         bst.add(arr[i]);
+        bst.to_string();
+        std::cout << "---------------------------------" << std::endl;
     }
+    bst.remove(7);
+    bst.remove(5);
+    bst.to_string();
+    std::cout << "---------------------------------" << std::endl;
 
-    if (!bst.isEmpty()) {
-        bst.preOrderTraverse();
-        std::cout << std::endl;
-        bst.inOrderTraverse();
-        std::cout << std::endl;
-        bst.postOrderTraverse();
-        std::cout << std::endl;
-        bst.levelOrderTraverse();
-    }
-
-    std::cout << std::endl << "size=" << bst.size() << std::endl;
-
-    int a = 8;
-    if (bst.contains(a)) {
-        std::cout << "contains " << a << std::endl;
-    }
-
+    std::cout << std::endl;
+    std::cout << "size=" << bst.size() << std::endl;
     std::cout << "height=" << bst.height2() << std::endl;
     std::cout << "height=" << bst.height() << std::endl;
-    if (bst.isComplete()) {
-        std::cout << "is complete binary tree." << std::endl;
-    } else {
-        std::cout << "is not complete binary tree." << std::endl;
-    }
 
-    bst.to_string();
+    // bst.to_string();
 
 //    bst.invertTree();
 //    bst.to_string();

@@ -20,6 +20,7 @@ namespace mystd
         std::shared_ptr<TreeNode<T>> get_node(const T& value);
         void remove(std::shared_ptr<TreeNode<T>> node);
         virtual void afterAdd(std::shared_ptr<TreeNode<T>> node) {}
+        virtual void afterRemove(std::shared_ptr<TreeNode<T>> node) {}
     };
 
     template<typename T>
@@ -70,7 +71,7 @@ namespace mystd
 
         if (node->hasTwoChildren()) {   // 度为2的节点
             // 找到前驱节点或后继节点的值
-            auto p = predecessor(node);
+            auto p = this->predecessor(node);
             // 将前驱节点或后继节点的值覆盖当前节点
             node->value = p->value;
             // 将前驱节点或后继节点删除
@@ -91,14 +92,23 @@ namespace mystd
             } else {    // node == node->parent.lock()->right
                 node->parent.lock()->right = replacement;
             }
+
+            // 删除节点之后的处理
+            afterRemove(node);
         } else if (!node->parent.lock()) {    // node是叶子节点并且是根节点
             this->root = nullptr;
+
+            // 删除节点之后的处理
+            afterRemove(node);
         } else {    // node是叶子节点，但不是根节点
             if (node == node->parent.lock()->left) {
                 node->parent.lock()->left = nullptr;
             } else {    // node == node->parent.lock()->righ
                 node->parent.lock()->right = nullptr;
             }
+
+            // 删除节点之后的处理
+            afterRemove(node);
         }
     }
 

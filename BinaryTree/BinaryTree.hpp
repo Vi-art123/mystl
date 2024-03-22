@@ -1,5 +1,5 @@
 //
-// Created by wyx on 2024/2/28.
+// Created by wyx on 2024/3/21.
 // 二叉树基类
 //
 #pragma once
@@ -24,22 +24,56 @@ namespace mystd
 //        virtual ~TreeNode() { std::cout << "delete TreeNode: " << value << std::endl; }
         virtual ~TreeNode() = default;
 
+        /**
+         * 节点转换为字符串
+         * @return 
+         */    
+        virtual std::string toString() const
+        {
+            std::string str = std::to_string(value);
+            str.append("_p(");
+            if (auto p = parent.lock()) {
+                str.append(std::to_string(p->value));
+            } else {
+                str.append("null");
+            }
+            str.push_back(')');
+
+            return str;
+        }
+
+        /**
+         * 度是否为2
+         * @return 
+         */        
         [[nodiscard]] bool hasTwoChildren() const
         {
             return (left != nullptr && right != nullptr);
         }
 
+        /**
+         * 是否为叶子节点
+         * @return 
+         */        
         [[nodiscard]] bool isLeaf() const
         {
             return (left == nullptr && right == nullptr);
         }
 
-        [[nodiscard]] bool isLeft() const
+        /**
+         * 判断节点是否在左边
+         * @return 
+         */        
+        [[nodiscard]] bool isLeftChild() const
         {
             return (parent.lock() && this == parent.lock()->left.get());
         }
 
-        [[nodiscard]] bool isRight() const
+        /**
+         * 判断节点是否在右边
+         * @return 
+         */        
+        [[nodiscard]] bool isRightChild() const
         {
             return (parent.lock() && this == parent.lock()->right.get());
         }
@@ -88,6 +122,10 @@ namespace mystd
         m_size = 0;
     }
 
+    /**
+     * 创建节点，派生类重写此方法来创建自己的节点
+     * @return 
+     */    
     template<typename T>
     inline std::shared_ptr<TreeNode<T>> BinaryTree<T>::createNode(const T& value, std::shared_ptr<TreeNode<T>> parent)
     {
@@ -177,7 +215,6 @@ namespace mystd
 
     /**
      * 翻转二叉树，把所有节点的左右子树交换（可以使用前序，后续，中序，层序遍历实现）
-     * @return 
      */    
     template<typename T>
     void BinaryTree<T>::invertTree()
@@ -205,7 +242,7 @@ namespace mystd
     }
 
     /**
-     * 层序遍历方式
+     * 获取树的高度（层序遍历方式）
      * @return 
      */    
     template<typename T>
@@ -239,7 +276,7 @@ namespace mystd
     }
 
     /**
-     * 递归方式
+     * 获取树的高度（递归方式）
      * @param node
      * @return 
      */    
@@ -348,6 +385,9 @@ namespace mystd
         return node->parent.lock();
     }
 
+    /**
+     * 打印二叉树
+     */    
     template<typename T>
     void BinaryTree<T>::to_string() const
     {
@@ -363,7 +403,7 @@ namespace mystd
 
             levelRowSize--;
             
-            std::cout << node->value << " ";
+            std::cout << node->toString() << " ";
 
             if (node->left != nullptr) {
                 qp.push(node->left);
