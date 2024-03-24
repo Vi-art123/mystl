@@ -46,8 +46,9 @@ namespace mystd
             }
         }
 
-    protected:
+    public:
         static constexpr int ELEMENT_NOT_FOUND = -1;
+    protected:
         int m_size = 0;
     };
 } // mystd

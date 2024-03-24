@@ -6,6 +6,9 @@
 #include <Stack.hpp>
 #include <Queue.hpp>
 #include <Deque.hpp>
+#include <ListSet.hpp>
+#include <TreeSet.hpp>
+#include <map>
 
 
 void test01()
@@ -104,6 +107,18 @@ void test05()
     queue.deQueue();
     queue.to_string();
     std::cout << queue.front() << std::endl;
+}
+
+void test06()
+{
+    mystd::TreeSet<int> set;
+    int arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 9};
+    int len = sizeof arr/sizeof arr[0];
+    for (int i = 0; i < len; ++i) {
+        set.add(arr[i]);
+    }
+
+    set.traversal();
 }
 
 int main()

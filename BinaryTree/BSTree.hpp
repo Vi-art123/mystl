@@ -16,10 +16,10 @@ namespace mystd
     public:
         void add(const T& value);
         void remove(const T& value) { remove(get_node(value)); }
-        [[nodiscard]] bool contains(const T& value) { return get_node(value) != nullptr; }
+        [[nodiscard]] bool contains(const T& value) const { return get_node(value) != nullptr; }
     private:
-        int compare(const T& v1, const T& v2);
-        std::shared_ptr<TreeNode<T>> get_node(const T& value);
+        int compare(const T& v1, const T& v2) const;
+        std::shared_ptr<TreeNode<T>> get_node(const T& value) const;
         void remove(std::shared_ptr<TreeNode<T>> node);
 
         /**
@@ -125,13 +125,14 @@ namespace mystd
     }
 
     template<typename T>
-    inline int BSTree<T>::compare(const T& v1, const T& v2)
+    inline int BSTree<T>::compare(const T& v1, const T& v2) const
     {
-        return v1 - v2;
+        if (v1 == v2) return 0;
+        return v1 < v2 ? -1 : 1;
     }
 
     template<typename T>
-    std::shared_ptr<TreeNode<T>> BSTree<T>::get_node(const T &value)
+    std::shared_ptr<TreeNode<T>> BSTree<T>::get_node(const T &value) const
     {
         auto node = this->root;
         while (node != nullptr)
