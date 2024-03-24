@@ -1,4 +1,5 @@
 #include <AVLTree.hpp>
+#include <RBTree.hpp>
 #include <CircleLinkedList.hpp>
 #include <SinglyLinkedList.hpp>
 #include <SinglyCircleLinkedList.hpp>
@@ -9,27 +10,28 @@
 
 void test01()
 {
-    mystd::AVLTree<int> bst;
+    mystd::RBTree<int> bst;
     // int arr[] = {7, 9, 4, 2, 5, 8, 11, 1, 3, 10, 12};
 //    int arr[] = {7, 9, 4, 2, 5, 8, 11, 1, 3};
     int arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
     int len = sizeof arr/sizeof arr[0];
     for (int i = 0; i < len; ++i) {
         bst.add(arr[i]);
+//        bst.to_string();
+//        std::cout << "---------------------------------" << std::endl;
+    }
+#if 1
+    bst.to_string();
+    std::cout << "---------------------------------" << std::endl;
+    for (int i = 0; i < len; ++i) {
+        bst.remove(arr[i]);
         bst.to_string();
         std::cout << "---------------------------------" << std::endl;
     }
-    bst.remove(7);
-    bst.remove(5);
-    bst.to_string();
-    std::cout << "---------------------------------" << std::endl;
-
+#endif
     std::cout << std::endl;
     std::cout << "size=" << bst.size() << std::endl;
-    std::cout << "height=" << bst.height2() << std::endl;
     std::cout << "height=" << bst.height() << std::endl;
-
-    // bst.to_string();
 
 //    bst.invertTree();
 //    bst.to_string();

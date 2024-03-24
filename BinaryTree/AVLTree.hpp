@@ -4,7 +4,7 @@
 //
 #pragma once
 
-#include "BST.hpp"
+#include "BBSTree.hpp"
 
 namespace mystd
 {
@@ -55,7 +55,7 @@ namespace mystd
             return this->isLeftChild() ? this->left : this->right;  // 如果左右子树高度相等，则返回与自己同方向的子树
         }
 
-        std::string toString() const override
+        [[nodiscard]] std::string toString() const override
         {
             std::string str = std::to_string(this->value);
             str.append("_p(");
@@ -75,37 +75,33 @@ namespace mystd
     };
 
     template<typename T>
-    class AVLTree : public BST<T>
+    class AVLTree : public BBSTree<T>
     {
     protected:
-        std::shared_ptr<TreeNode<T>> createNode(const T& value, std::shared_ptr<TreeNode<T>> parent) override;
+        std::shared_ptr<TreeNode<T>> createNode(const T& value, std::shared_ptr<TreeNode<T>> parent) override
+        {
+            return std::make_shared<AVLNode<T>>(value, parent);
+        }
+
+        void afterRotate(std::shared_ptr<TreeNode<T>> grand,
+                                 std::shared_ptr<TreeNode<T>> parent,
+                                 std::shared_ptr<TreeNode<T>> child) override;
+        void rotate(std::shared_ptr<TreeNode<T>> r,
+                    std::shared_ptr<TreeNode<T>> b, std::shared_ptr<TreeNode<T>> c,
+                    std::shared_ptr<TreeNode<T>> d,
+                    std::shared_ptr<TreeNode<T>> e, std::shared_ptr<TreeNode<T>> f) override;
     private:
         void afterAdd(std::shared_ptr<TreeNode<T>> node) override;
         void afterRemove(std::shared_ptr<TreeNode<T>> node) override;
         void updateHeight(std::shared_ptr<TreeNode<T>> node);
         void rebalance(std::shared_ptr<TreeNode<T>> grand);
-        void rebalance2(std::shared_ptr<TreeNode<T>> grand);
-        void rotateLeft(std::shared_ptr<TreeNode<T>> grand);
-        void rotateRight(std::shared_ptr<TreeNode<T>> grand);
-        void afterRotate(std::shared_ptr<TreeNode<T>> grand,
-                         std::shared_ptr<TreeNode<T>> parent,
-                         std::shared_ptr<TreeNode<T>> child);
-        void rotate(std::shared_ptr<TreeNode<T>> r,
-                    std::shared_ptr<TreeNode<T>> b, std::shared_ptr<TreeNode<T>> c,
-                    std::shared_ptr<TreeNode<T>> d,
-                    std::shared_ptr<TreeNode<T>> e, std::shared_ptr<TreeNode<T>> f);
+        [[maybe_unused]] void rebalance2(std::shared_ptr<TreeNode<T>> grand);
         bool isBalanced(std::shared_ptr<TreeNode<T>> node) const;
     };
 
-    template<typename T>
-    std::shared_ptr<TreeNode<T>> AVLTree<T>::createNode(const T &value, std::shared_ptr<TreeNode<T>> parent)
-    {
-        return std::make_shared<AVLNode<T>>(value, parent);
-    }
-
     /**
      * 新添加节点之后的处理
-     * @param node
+     * @param node 新添加的节点
      */
     template<typename T>
     void AVLTree<T>::afterAdd(std::shared_ptr<TreeNode<T>> node)
@@ -178,49 +174,25 @@ namespace mystd
      * @param grand 高度最低的那个不平衡点
      */
     template<typename T>
-    void AVLTree<T>::rebalance2(std::shared_ptr<TreeNode<T>> grand)
+    [[maybe_unused]] void AVLTree<T>::rebalance2(std::shared_ptr<TreeNode<T>> grand)
     {
         auto parent = std::dynamic_pointer_cast<AVLNode<T>>(grand)->tallerChild();
         auto node = std::dynamic_pointer_cast<AVLNode<T>>(parent)->tallerChild();
         if (parent->isLeftChild()) {
             if (node->isLeftChild()) { // LL
-                rotateRight(grand);
+                this->rotateRight(grand);
             } else {    // LR
-                rotateLeft(parent);
-                rotateRight(grand);
+                this->rotateLeft(parent);
+                this->rotateRight(grand);
             }
         } else {
             if (node->isLeftChild()) { // RL
-                rotateRight(parent);
-                rotateLeft(grand);
+                this->rotateRight(parent);
+                this->rotateLeft(grand);
             } else {    // RR
-                rotateLeft(grand);
+                this->rotateLeft(grand);
             }
         }
-    }
-
-    template<typename T>
-    void AVLTree<T>::rotateLeft(std::shared_ptr<TreeNode<T>> grand)
-    {
-        auto parent = grand->right;
-        auto child = parent->left;
-        grand->right = child;
-        parent->left = grand;
-
-        // 执行旋转后的操作
-        afterRotate(grand, parent, child);
-    }
-
-    template<typename T>
-    void AVLTree<T>::rotateRight(std::shared_ptr<TreeNode<T>> grand)
-    {
-        auto parent = grand->left;
-        auto child = parent->right;
-        grand->left = child;
-        parent->right = grand;
-
-        // 执行旋转后的操作
-        afterRotate(grand, parent, child);
     }
 
     template<typename T>
@@ -228,24 +200,7 @@ namespace mystd
                                  std::shared_ptr<TreeNode<T>> parent,
                                  std::shared_ptr<TreeNode<T>> child)
     {
-        // 让parent成为子树的根节点
-        parent->parent = grand->parent;
-        if (grand->isLeftChild()) {
-            grand->parent.lock()->left = parent;
-        } else if (grand->isRightChild()) {
-            grand->parent.lock()->right = parent;
-        } else {    // grand是根节点
-            this->root = parent;
-        }
-
-        // 更新child的parent
-        if (child != nullptr) {
-            child->parent = grand;
-        }
-
-        // 更新grand的parent
-        grand->parent = parent;
-
+        BBSTree<T>::afterRotate(grand, parent, child);
         // 更新高度(先更新矮的，再更新高的)
         updateHeight(grand);
         updateHeight(parent);
@@ -253,42 +208,17 @@ namespace mystd
 
     /**
      * 统一旋转操作
-     */    
+     */
     template<typename T>
     void AVLTree<T>::rotate(std::shared_ptr<TreeNode<T>> r, // 子树的根节点
                             std::shared_ptr<TreeNode<T>> b, std::shared_ptr<TreeNode<T>> c,
                             std::shared_ptr<TreeNode<T>> d,
                             std::shared_ptr<TreeNode<T>> e, std::shared_ptr<TreeNode<T>> f)
     {
-        // 让d成为子树的根节点
-        d->parent = r->parent;
-        if (r->isLeftChild()) {
-            r->parent.lock()->left = d;
-        } else if (r->isRightChild()) {
-            r->parent.lock()->right = d;
-        } else {
-            this->root = d;
-        }
-
-        // b-c的处理
-        b->right = c;
-        if (c != nullptr) {
-            c->parent = b;
-        }
+        BBSTree<T>::rotate(r, b, c, d, e, f);
+        // 更新高度(先更新矮的，再更新高的)
         updateHeight(b);
-
-        // e-f的处理
-        f->left = e;
-        if (e != nullptr) {
-            e->parent = f;
-        }
         updateHeight(f);
-
-        // b-f的处理
-        d->left = b;
-        d->right = f;
-        b->parent = d;
-        f->parent = d;
         updateHeight(d);
     }
 

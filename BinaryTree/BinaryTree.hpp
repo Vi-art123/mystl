@@ -28,7 +28,7 @@ namespace mystd
          * 节点转换为字符串
          * @return 
          */    
-        virtual std::string toString() const
+        [[nodiscard]] virtual std::string toString() const
         {
             std::string str = std::to_string(value);
             str.append("_p(");
@@ -46,7 +46,7 @@ namespace mystd
          * 度是否为2
          * @return 
          */        
-        [[nodiscard]] bool hasTwoChildren() const
+        [[nodiscard]] bool hasTwoChildren() const noexcept
         {
             return (left != nullptr && right != nullptr);
         }
@@ -55,7 +55,7 @@ namespace mystd
          * 是否为叶子节点
          * @return 
          */        
-        [[nodiscard]] bool isLeaf() const
+        [[nodiscard]] bool isLeaf() const noexcept
         {
             return (left == nullptr && right == nullptr);
         }
@@ -64,7 +64,7 @@ namespace mystd
          * 判断节点是否在左边
          * @return 
          */        
-        [[nodiscard]] bool isLeftChild() const
+        [[nodiscard]] bool isLeftChild() const noexcept
         {
             return (parent.lock() && this == parent.lock()->left.get());
         }
@@ -73,9 +73,21 @@ namespace mystd
          * 判断节点是否在右边
          * @return 
          */        
-        [[nodiscard]] bool isRightChild() const
+        [[nodiscard]] bool isRightChild() const noexcept
         {
             return (parent.lock() && this == parent.lock()->right.get());
+        }
+
+        /**
+         * 获取兄弟节点
+         * @return
+         */
+        std::shared_ptr<TreeNode> sibling() const noexcept
+        {
+            if (!parent.lock()) {
+                return nullptr;
+            }
+            return isLeftChild() ? parent.lock()->right : parent.lock()->left;
         }
     };
 

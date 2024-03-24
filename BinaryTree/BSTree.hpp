@@ -4,12 +4,14 @@
 //
 #pragma once
 
+#define UNUSED(expr) (void)(expr);
+
 #include "BinaryTree.hpp"
 
 namespace mystd
 {
     template<typename T>
-    class BST : public BinaryTree<T>
+    class BSTree : public BinaryTree<T>
     {
     public:
         void add(const T& value);
@@ -19,12 +21,22 @@ namespace mystd
         int compare(const T& v1, const T& v2);
         std::shared_ptr<TreeNode<T>> get_node(const T& value);
         void remove(std::shared_ptr<TreeNode<T>> node);
-        virtual void afterAdd(std::shared_ptr<TreeNode<T>> node) {}
-        virtual void afterRemove(std::shared_ptr<TreeNode<T>> node) {}
+
+        /**
+         * 添加节点之后的处理（派生类重写做相应的处理）
+         * @param node 新添加的节点
+         */
+        virtual void afterAdd(std::shared_ptr<TreeNode<T>> node) { UNUSED(node); }
+
+        /**
+         * 删除node之后的调整（派生类重写做相应的处理）
+         * @param node 被删除的节点 或者 用以取代被删除节点的子节点
+         */
+        virtual void afterRemove(std::shared_ptr<TreeNode<T>> node) { UNUSED(node); }
     };
 
     template<typename T>
-    void BST<T>::add(const T& value)
+    void BSTree<T>::add(const T& value)
     {
         // 第一次添加
         if (this->root == nullptr) {
@@ -64,7 +76,7 @@ namespace mystd
     }
 
     template<typename T>
-    void BST<T>::remove(std::shared_ptr<TreeNode<T>> node)
+    void BSTree<T>::remove(std::shared_ptr<TreeNode<T>> node)
     {
         if (node == nullptr) return;
         this->m_size--;
@@ -94,7 +106,7 @@ namespace mystd
             }
 
             // 删除节点之后的处理
-            afterRemove(node);
+            afterRemove(replacement);
         } else if (!node->parent.lock()) {    // node是叶子节点并且是根节点
             this->root = nullptr;
 
@@ -113,13 +125,13 @@ namespace mystd
     }
 
     template<typename T>
-    inline int BST<T>::compare(const T& v1, const T& v2)
+    inline int BSTree<T>::compare(const T& v1, const T& v2)
     {
         return v1 - v2;
     }
 
     template<typename T>
-    std::shared_ptr<TreeNode<T>> BST<T>::get_node(const T &value)
+    std::shared_ptr<TreeNode<T>> BSTree<T>::get_node(const T &value)
     {
         auto node = this->root;
         while (node != nullptr)
