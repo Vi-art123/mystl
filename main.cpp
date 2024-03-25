@@ -8,7 +8,7 @@
 #include <Deque.hpp>
 #include <ListSet.hpp>
 #include <TreeSet.hpp>
-#include <map>
+#include <TreeMap.hpp>
 
 
 void test01()
@@ -121,8 +121,19 @@ void test06()
     set.traversal();
 }
 
+void test07()
+{
+    mystd::TreeMap<std::string, int> tmap;
+    tmap.put("wyx", 1);
+    tmap.put("zs", 2);
+    tmap.put("ls", 3);
+    tmap.put("ww", 78);
+
+    tmap.traversal();
+}
+
 int main()
 {
-    test01();
+    test07();
     return 0;
 }

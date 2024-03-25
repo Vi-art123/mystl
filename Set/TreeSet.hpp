@@ -5,7 +5,7 @@
 #pragma once
 
 #include "Set.hpp"
-#include <RBTree.hpp>
+#include <TreeMap.hpp>
 
 namespace mystd
 {
@@ -13,22 +13,18 @@ namespace mystd
     class TreeSet : public Set<T>
     {
     public:
-        [[nodiscard]] int size() const noexcept override { return rbTree.size(); }
-        [[nodiscard]] bool isEmpty() const noexcept override { return rbTree.isEmpty(); }
-        void clear() override { rbTree.clear(); }
-        bool contains(const T& value) const override { return rbTree.contains(value); }
-        void add(const T& value) override { rbTree.add(value);}
-        void remove(const T& value) override { rbTree.remove(value); }
+        [[nodiscard]] int size() const noexcept override { return tree_map.size(); }
+        [[nodiscard]] bool isEmpty() const noexcept override { return tree_map.isEmpty(); }
+        void clear() override { tree_map.clear(); }
+        bool contains(const T& value) const override { return tree_map.containsKey(value); }
+        void add(const T& value) override { tree_map.put(value, nullptr);}
+        void remove(const T& value) override { tree_map.remove(value); }
         void traversal() override
         {
-            std::cout << "size:" << size() << ", ";
-            std::cout << "[ ";
-            rbTree.inOrderTraverse();
-            std::cout << "]";
-            std::cout << std::endl;
+            tree_map.traversal();
         }
 
     private:
-        RBTree<T> rbTree;
+        TreeMap<T, void*> tree_map;
     };
 }
