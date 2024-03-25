@@ -9,6 +9,7 @@
 #include <ListSet.hpp>
 #include <TreeSet.hpp>
 #include <TreeMap.hpp>
+#include <BinaryHeap.hpp>
 
 
 void test01()
@@ -132,8 +133,35 @@ void test07()
     tmap.traversal();
 }
 
+void test08()
+{
+    // topK问题
+
+    // 创建一个小顶堆
+    mystd::BinaryHeap<int> heap([](const int& v1, const int& v2) -> int {
+        return v2 - v1;
+    });
+
+    // 找出最大的前k个数
+    int k = 5;
+    int arr[] = {
+            7, 9, 4, 2, 5, 8, 11, 1, 3, 10, 12, 13, 20, 6
+    };
+    int len = sizeof arr/sizeof arr[0];
+    for (int i = 0; i < len; ++i) {
+        if (heap.size() < k) {  // 前k个数添加到小顶堆
+            heap.add(arr[i]);
+        } else if (arr[i] > heap.get()) {  // 如果是第k+1个数，并且大于堆顶
+                heap.replace(arr[i]);
+        }
+    }
+//    mystd::BinaryHeap<int> heap(arr, len);
+
+    heap.to_string();
+}
+
 int main()
 {
-    test07();
+    test08();
     return 0;
 }

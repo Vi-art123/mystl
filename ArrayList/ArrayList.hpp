@@ -114,7 +114,7 @@ namespace mystd
     void ArrayList<T>::trim_capacity()
     {
         if (this->m_size >= (m_capacity >> 1) 
-            && m_capacity <= DEFAULT_CAPACITY)
+            || m_capacity <= DEFAULT_CAPACITY)
             return;
 
         m_capacity >>= 1;
