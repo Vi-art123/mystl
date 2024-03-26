@@ -496,8 +496,8 @@ namespace mystd
 
     template<typename K, typename V>
     void TreeMap<K, V>::afterRotate(std::shared_ptr<TMNode<K, V>> grand,
-                                 std::shared_ptr<TMNode<K, V>> parent,
-                                 std::shared_ptr<TMNode<K, V>> child)
+                                    std::shared_ptr<TMNode<K, V>> parent,
+                                    std::shared_ptr<TMNode<K, V>> child)
     {
         // 让parent成为子树的根节点
         parent->parent = grand->parent;

@@ -17,9 +17,9 @@ namespace mystd
     public:
         BinaryHeap() : BinaryHeap(nullptr, DEFAULT_CAPACITY) {}
 
-        explicit BinaryHeap(Comp_fun_t<T> compFun) : BinaryHeap(nullptr, DEFAULT_CAPACITY, compFun) {}
+        explicit BinaryHeap(const Heap<T>::Comp_func_t& compFun) : BinaryHeap(nullptr, DEFAULT_CAPACITY, compFun) {}
 
-        BinaryHeap(T arr[], int _size, Comp_fun_t<T> compFun = nullptr)
+        BinaryHeap(T arr[], int _size, const Heap<T>::Comp_func_t& compFun = nullptr)
         {
             this->setComparator(compFun);
             m_capacity = std::max(_size, DEFAULT_CAPACITY);
@@ -56,14 +56,14 @@ namespace mystd
         BinaryHeap& operator=(const BinaryHeap& _heap) noexcept
         {
             // 先拷贝一个临时对象，再交换到当前对象，避免自我赋值和异常
-            ArrayList(_heap).swap(*this);
+            BinaryHeap(_heap).swap(*this);
             return *this;
         }
 
         BinaryHeap& operator=(BinaryHeap&& _heap) noexcept
         {
             // 先移动到一个临时对象，再交换到当前对象
-            ArrayList(std::move(_heap)).swap(*this);
+            BinaryHeap(std::move(_heap)).swap(*this);
             return *this;
         }
 
@@ -192,6 +192,9 @@ namespace mystd
         }
     }
 
+    /**
+     * 批量建堆
+     */    
     template<typename T>
     void BinaryHeap<T>::heapify()
     {

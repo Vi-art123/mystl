@@ -4,15 +4,16 @@
 //
 #pragma once
 
+#include <functional>
+
 namespace mystd
 {
-    template<typename T>
-    using Comp_fun_t = int (*)(const T& v1, const T& v2);
-
     template<typename T>
     class Heap
     {
     public:
+        using Comp_func_t = std::function<int(const T&, const T&)>;
+
         Heap() = default;
         Heap(const Heap&) = default;
         Heap(Heap&&) = default;
@@ -26,7 +27,7 @@ namespace mystd
         virtual T remove() = 0; // 删除堆顶元素
         virtual T replace(const T& value) = 0;  // 删除堆顶元素的同时插入一个新元素
 
-        void setComparator(Comp_fun_t<T> _func) { Comp = _func; }
+        void setComparator(const Comp_func_t& _func) { Comp = std::move(_func); }
     protected:
         int compare(const T& v1, const T& v2) const noexcept
         {
@@ -41,6 +42,6 @@ namespace mystd
         int m_size = 0;
 
     private:
-        Comp_fun_t<T> Comp = nullptr;
+        Comp_func_t Comp;
     };
 }
