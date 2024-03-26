@@ -10,75 +10,74 @@
 namespace mystd
 {
     template<typename K, typename V>
-    struct TMNode
-    {
-        K key;
-        V value;
-
-        RBColor color = RED;    // 默认为红色，这样能够让红黑树的性质尽快满足（性质1，2，3，5都满足，性质4不一定）
-
-        std::weak_ptr<TMNode> parent;
-        std::shared_ptr<TMNode> left;
-        std::shared_ptr<TMNode> right;
-        TMNode() = default;
-        TMNode(const TMNode& node) = default;
-        TMNode(TMNode&& node) = default;
-        TMNode(const K& k, const V& val, std::weak_ptr<TMNode> p) : key(k), value(val), parent(p) {}
-        // virtual ~TMNode() { std::cout << "delete TMNode: " << key << ":" << value << std::endl; }
-
-
-        /**
-         * 度是否为2
-         * @return 
-         */
-        [[nodiscard]] bool hasTwoChildren() const noexcept
-        {
-            return (left != nullptr && right != nullptr);
-        }
-
-        /**
-         * 是否为叶子节点
-         * @return 
-         */
-        [[nodiscard]] bool isLeaf() const noexcept
-        {
-            return (left == nullptr && right == nullptr);
-        }
-
-        /**
-         * 判断节点是否在左边
-         * @return 
-         */
-        [[nodiscard]] bool isLeftChild() const noexcept
-        {
-            return (parent.lock() && this == parent.lock()->left.get());
-        }
-
-        /**
-         * 判断节点是否在右边
-         * @return 
-         */
-        [[nodiscard]] bool isRightChild() const noexcept
-        {
-            return (parent.lock() && this == parent.lock()->right.get());
-        }
-
-        /**
-         * 获取兄弟节点
-         * @return
-         */
-        std::shared_ptr<TMNode> sibling() const noexcept
-        {
-            if (!parent.lock()) {
-                return nullptr;
-            }
-            return isLeftChild() ? parent.lock()->right : parent.lock()->left;
-        }
-    };
-    
-    template<typename K, typename V>
     class TreeMap : public Map<K, V>
     {
+    private:
+        struct TMNode
+        {
+            K key;
+            V value;
+
+            RBColor color = RED;    // 默认为红色，这样能够让红黑树的性质尽快满足（性质1，2，3，5都满足，性质4不一定）
+
+            std::weak_ptr<TMNode> parent;
+            std::shared_ptr<TMNode> left;
+            std::shared_ptr<TMNode> right;
+            TMNode() = default;
+            TMNode(const TMNode& node) = default;
+            TMNode(TMNode&& node) = default;
+            TMNode(const K& k, const V& val, std::weak_ptr<TMNode> p) : key(k), value(val), parent(p) {}
+            // virtual ~TMNode() { std::cout << "delete TMNode: " << key << ":" << value << std::endl; }
+
+
+            /**
+             * 度是否为2
+             * @return 
+             */
+            [[nodiscard]] bool hasTwoChildren() const noexcept
+            {
+                return (left != nullptr && right != nullptr);
+            }
+
+            /**
+             * 是否为叶子节点
+             * @return 
+             */
+            [[nodiscard]] bool isLeaf() const noexcept
+            {
+                return (left == nullptr && right == nullptr);
+            }
+
+            /**
+             * 判断节点是否在左边
+             * @return 
+             */
+            [[nodiscard]] bool isLeftChild() const noexcept
+            {
+                return (parent.lock() && this == parent.lock()->left.get());
+            }
+
+            /**
+             * 判断节点是否在右边
+             * @return 
+             */
+            [[nodiscard]] bool isRightChild() const noexcept
+            {
+                return (parent.lock() && this == parent.lock()->right.get());
+            }
+
+            /**
+             * 获取兄弟节点
+             * @return
+             */
+            std::shared_ptr<TMNode> sibling() const noexcept
+            {
+                if (!parent.lock()) {
+                    return nullptr;
+                }
+                return isLeftChild() ? parent.lock()->right : parent.lock()->left;
+            }
+        };
     public:
         [[nodiscard]] int size() const noexcept override { return m_size; }
         [[nodiscard]] bool isEmpty() const noexcept override { return m_size == 0; }
@@ -103,25 +102,25 @@ namespace mystd
         void traversal() override;
 
     private:
-        std::shared_ptr<TMNode<K, V>> get_node(const K& key) const;
-        std::shared_ptr<TMNode<K, V>> predecessor(std::shared_ptr<TMNode<K, V>> node);
-        std::shared_ptr<TMNode<K, V>> make_color(std::shared_ptr<TMNode<K, V>> node, RBColor color);
-        std::shared_ptr<TMNode<K, V>> make_red(std::shared_ptr<TMNode<K, V>> node) { return make_color(node, RED); }
-        std::shared_ptr<TMNode<K, V>> make_black(std::shared_ptr<TMNode<K, V>> node) { return make_color(node, BLACK); }
+        std::shared_ptr<TMNode> get_node(const K& key) const;
+        std::shared_ptr<TMNode> predecessor(std::shared_ptr<TMNode> node);
+        std::shared_ptr<TMNode> make_color(std::shared_ptr<TMNode> node, RBColor color);
+        std::shared_ptr<TMNode> make_red(std::shared_ptr<TMNode> node) { return make_color(node, RED); }
+        std::shared_ptr<TMNode> make_black(std::shared_ptr<TMNode> node) { return make_color(node, BLACK); }
 
-        bool isRed(std::shared_ptr<TMNode<K, V>> node) const noexcept { return colorOf(node) == RED; }
-        bool isBlack(std::shared_ptr<TMNode<K, V>> node) const noexcept { return colorOf(node) == BLACK; }
-        void remove(std::shared_ptr<TMNode<K, V>> node);
-        void afterAdd(std::shared_ptr<TMNode<K, V>> node);
-        void afterRemove(std::shared_ptr<TMNode<K, V>> node);
-        void rotateLeft(std::shared_ptr<TMNode<K, V>> grand);
-        void rotateRight(std::shared_ptr<TMNode<K, V>> grand);
-        void afterRotate(std::shared_ptr<TMNode<K, V>> grand,
-                         std::shared_ptr<TMNode<K, V>> parent,
-                         std::shared_ptr<TMNode<K, V>> child);
-        void inOrderTraverse(std::shared_ptr<TMNode<K, V>> node);
+        bool isRed(std::shared_ptr<TMNode> node) const noexcept { return colorOf(node) == RED; }
+        bool isBlack(std::shared_ptr<TMNode> node) const noexcept { return colorOf(node) == BLACK; }
+        void remove(std::shared_ptr<TMNode> node);
+        void afterAdd(std::shared_ptr<TMNode> node);
+        void afterRemove(std::shared_ptr<TMNode> node);
+        void rotateLeft(std::shared_ptr<TMNode> grand);
+        void rotateRight(std::shared_ptr<TMNode> grand);
+        void afterRotate(std::shared_ptr<TMNode> grand,
+                         std::shared_ptr<TMNode> parent,
+                         std::shared_ptr<TMNode> child);
+        void inOrderTraverse(std::shared_ptr<TMNode> node);
 
-        RBColor colorOf(std::shared_ptr<TMNode<K, V>> node) const noexcept
+        RBColor colorOf(std::shared_ptr<TMNode> node) const noexcept
         {
             // 空节点为黑色
             return node == nullptr ? BLACK : node->color;
@@ -135,7 +134,7 @@ namespace mystd
 
     private:
         int m_size = 0;
-        std::shared_ptr<TMNode<K, V>> root;
+        std::shared_ptr<TMNode> root;
     };
 
     template<typename K, typename V>
@@ -143,7 +142,7 @@ namespace mystd
     {
         // 第一次添加
         if (root == nullptr) {
-            root = std::make_shared<TMNode<K, V>>(key, value, root);
+            root = std::make_shared<TMNode>(key, value, root);
             m_size++;
             // 新添加节点之后的处理
             afterAdd(root);
@@ -167,7 +166,7 @@ namespace mystd
             }
         }
 
-        auto new_node = std::make_shared<TMNode<K, V>>(key, value, parent);
+        auto new_node = std::make_shared<TMNode>(key, value, parent);
         if (cmp > 0) {
             parent->left = new_node;
         } else {
@@ -214,7 +213,7 @@ namespace mystd
     }
 
     template<typename K, typename V>
-    void TreeMap<K, V>::remove(std::shared_ptr<TMNode<K, V>> node)
+    void TreeMap<K, V>::remove(std::shared_ptr<TMNode> node)
     {
         if (node == nullptr) return;
         m_size--;
@@ -263,7 +262,7 @@ namespace mystd
     }
 
     template<typename K, typename V>
-    void TreeMap<K, V>::inOrderTraverse(std::shared_ptr<TMNode<K, V>> node)
+    void TreeMap<K, V>::inOrderTraverse(std::shared_ptr<TMNode> node)
     {
         if (node == nullptr) return;
         inOrderTraverse(node->left);
@@ -272,7 +271,7 @@ namespace mystd
     }
 
     template<typename K, typename V>
-    std::shared_ptr<TMNode<K, V>> TreeMap<K, V>::get_node(const K &key) const
+    std::shared_ptr<typename TreeMap<K, V>::TMNode> TreeMap<K, V>::get_node(const K &key) const
     {
         auto node = root;
         while (node != nullptr)
@@ -295,7 +294,7 @@ namespace mystd
      * @return
      */
     template<typename K, typename V>
-    std::shared_ptr<TMNode<K, V>> TreeMap<K, V>::predecessor(std::shared_ptr<TMNode<K, V>> node)
+    std::shared_ptr<typename TreeMap<K, V>::TMNode> TreeMap<K, V>::predecessor(std::shared_ptr<TMNode> node)
     {
         if (node == nullptr) return node;
 
@@ -323,7 +322,7 @@ namespace mystd
      * @param node 新添加的节点
      */
     template<typename K, typename V>
-    void TreeMap<K, V>::afterAdd(std::shared_ptr<TMNode<K, V>> node)
+    void TreeMap<K, V>::afterAdd(std::shared_ptr<TMNode> node)
     {
         auto parent = node->parent.lock();
 
@@ -374,7 +373,7 @@ namespace mystd
      * @param node 被删除的节点 或者 用以取代被删除节点的子节点
      */
     template<typename K, typename V>
-    void TreeMap<K, V>::afterRemove(std::shared_ptr<TMNode<K, V>> node)
+    void TreeMap<K, V>::afterRemove(std::shared_ptr<TMNode> node)
     {
         // 如果删除的节点是红色
         // 或者 用以取代被删除节点的子节点是红色，将用以取代被删除节点的子节点染成黑色
@@ -463,7 +462,7 @@ namespace mystd
      * @return 返回染色后的节点
      */
     template<typename K, typename V>
-    inline std::shared_ptr<TMNode<K, V>> TreeMap<K, V>::make_color(std::shared_ptr<TMNode<K, V>> node, mystd::RBColor color)
+    inline std::shared_ptr<typename TreeMap<K, V>::TMNode> TreeMap<K, V>::make_color(std::shared_ptr<TMNode> node, mystd::RBColor color)
     {
         if (node != nullptr)
             node->color = color;
@@ -471,7 +470,7 @@ namespace mystd
     }
 
     template<typename K, typename V>
-    void TreeMap<K, V>::rotateLeft(std::shared_ptr<TMNode<K, V>> grand)
+    void TreeMap<K, V>::rotateLeft(std::shared_ptr<TMNode> grand)
     {
         auto parent = grand->right;
         auto child = parent->left;
@@ -483,7 +482,7 @@ namespace mystd
     }
 
     template<typename K, typename V>
-    void TreeMap<K, V>::rotateRight(std::shared_ptr<TMNode<K, V>> grand)
+    void TreeMap<K, V>::rotateRight(std::shared_ptr<TMNode> grand)
     {
         auto parent = grand->left;
         auto child = parent->right;
@@ -495,9 +494,9 @@ namespace mystd
     }
 
     template<typename K, typename V>
-    void TreeMap<K, V>::afterRotate(std::shared_ptr<TMNode<K, V>> grand,
-                                    std::shared_ptr<TMNode<K, V>> parent,
-                                    std::shared_ptr<TMNode<K, V>> child)
+    void TreeMap<K, V>::afterRotate(std::shared_ptr<TMNode> grand,
+                                    std::shared_ptr<TMNode> parent,
+                                    std::shared_ptr<TMNode> child)
     {
         // 让parent成为子树的根节点
         parent->parent = grand->parent;

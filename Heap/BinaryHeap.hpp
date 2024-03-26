@@ -15,9 +15,7 @@ namespace mystd
     class BinaryHeap : public Heap<T>
     {
     public:
-        BinaryHeap() : BinaryHeap(nullptr, DEFAULT_CAPACITY) {}
-
-        explicit BinaryHeap(const Heap<T>::Comp_func_t& compFun) : BinaryHeap(nullptr, DEFAULT_CAPACITY, compFun) {}
+        explicit BinaryHeap(const Heap<T>::Comp_func_t& compFun = nullptr) : BinaryHeap(nullptr, DEFAULT_CAPACITY, compFun) {}
 
         BinaryHeap(T arr[], int _size, const Heap<T>::Comp_func_t& compFun = nullptr)
         {

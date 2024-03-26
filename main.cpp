@@ -6,6 +6,7 @@
 #include <Stack.hpp>
 #include <Queue.hpp>
 #include <Deque.hpp>
+#include <PriorityQueue.hpp>
 #include <ListSet.hpp>
 #include <TreeSet.hpp>
 #include <TreeMap.hpp>
@@ -98,14 +99,14 @@ void test04()
 
 void test05()
 {
-    mystd::Queue<int> queue;
+    mystd::PriorityQueue<int> queue;
     int arr[] = {7, 9, 4, 2, 5, 8, 11, 1, 3, 10, 12};
     int len = sizeof arr/sizeof arr[0];
     for (int i = 0; i < len; ++i) {
         queue.enQueue(arr[i]);
     }
 
-    queue.deQueue();
+//    queue.deQueue();
     queue.to_string();
     std::cout << queue.front() << std::endl;
 }
