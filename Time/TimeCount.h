@@ -5,9 +5,7 @@
 #pragma once
 
 #include <chrono>
-#include <iomanip>
 #include <functional>
-#include <iostream>
 
 namespace mystd
 {

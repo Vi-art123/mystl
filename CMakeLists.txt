@@ -27,11 +27,12 @@ include_directories(${PROJECT_SOURCE_DIR}/Queue)
 include_directories(${PROJECT_SOURCE_DIR}/Set)
 include_directories(${PROJECT_SOURCE_DIR}/Map)
 
-include_directories(${PROJECT_SOURCE_DIR}/Sort)
+include_directories(${PROJECT_SOURCE_DIR}/Sort/include)
 
 aux_source_directory(./     SRC_FILES)
 aux_source_directory(./test SRC_FILES)
 aux_source_directory(./Time SRC_FILES)
+aux_source_directory(./Sort SRC_FILES)
 
 # 添加一个可执行文件
 add_executable(mystl ${SRC_FILES})

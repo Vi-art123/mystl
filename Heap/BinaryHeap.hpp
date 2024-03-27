@@ -8,6 +8,7 @@
 
 #include "Heap.hpp"
 #include <stdexcept>
+#include <iostream>
 
 namespace mystd
 {

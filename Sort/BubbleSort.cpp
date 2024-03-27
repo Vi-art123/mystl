@@ -2,19 +2,12 @@
 // Created by wyx on 2024/3/27.
 // 冒泡排序法
 //
-#pragma once
 
-#include "Sort.h"
+#include <BubbleSort.h>
+#include <TimeCount.h>
 
 namespace mystd
 {
-    class BubbleSort : public Sort
-    {
-    public:
-        BubbleSort(int *arr, int size) : Sort(arr, size, "BubbleSort") {}
-        void sort() override;
-    };
-
     void BubbleSort::sort()
     {
         TimeCount _time;
@@ -44,4 +37,4 @@ namespace mystd
 
         timeCount = _time.count();
     }
-}
+} // namespace mystd

@@ -8,6 +8,8 @@
 #include <SelectSort.h>
 #include <HeapSort.h>
 #include <thread>
+#include <iostream>
+#include <TimeCount.h>
 
 
 void testSort()
