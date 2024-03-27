@@ -9,29 +9,35 @@
 #include <HeapSort.h>
 #include <thread>
 #include <iostream>
+#include <random>
 #include <TimeCount.h>
 
 
 void testSort()
 {
-    int arr[] = {7, 9, 4, 2, 5, 8, 11, 1, 3, 10, 12, 9};
-    int len = sizeof arr/sizeof arr[0];
+    constexpr int min = 0;
+    constexpr int max = 10000;
+    int arr[max];
 
-    std::cout << "--------------------------------------------------------------" << std::endl;
+    std::random_device seed;    // 硬件生成随机数种子
+    std::ranlux48 engine(seed());   // 利用种子生成随机数引擎
+    std::uniform_int_distribution<> distrib(min, max);
+    for (int i = 0; i < max; i++) {
+        arr[i] = distrib(engine);   // 随机数
+    }
+    int len = max;
+
     mystd::BubbleSort bubble(arr, len);
     bubble.sort();
     bubble.to_string();
-    std::cout << "--------------------------------------------------------------" << std::endl;
 
     mystd::SelectSort select(arr, len);
     select.sort();
     select.to_string();
-    std::cout << "--------------------------------------------------------------" << std::endl;
 
     mystd::HeapSort heap(arr, len);
     heap.sort();
     heap.to_string();
-    std::cout << "--------------------------------------------------------------" << std::endl;
 }
 
 void testTime()

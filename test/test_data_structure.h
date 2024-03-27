@@ -11,3 +11,4 @@ void testQueue();
 void testSet();
 void testMap();
 void testHeap();
+void testAll();

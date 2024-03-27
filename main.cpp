@@ -3,6 +3,7 @@
 
 int main()
 {
+    testAll();
     testSort();
     return 0;
 }

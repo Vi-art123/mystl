@@ -17,8 +17,8 @@ namespace mystd
                 if (compare(m_arr[maxIndex], m_arr[begin]) <= 0) {
                     maxIndex = begin;
                 }
-                swap(m_arr[maxIndex], m_arr[end]);  // 找到最大的放末尾
             }
+            swap(m_arr[maxIndex], m_arr[end]);  // 找到最大的放末尾
         }
         timeCount = _time.count();
     }

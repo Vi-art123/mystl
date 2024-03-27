@@ -15,6 +15,9 @@
 #include <TreeMap.hpp>
 #include <BinaryHeap.hpp>
 
+#include <random>
+#include <TimeCount.h>
+
 #include "test_data_structure.h"
 
 
@@ -164,4 +167,84 @@ void testHeap()
 //    mystd::BinaryHeap<int> heap(arr, len);
 
     heap.to_string();
+}
+
+void testAll()
+{
+    constexpr int min = 0;
+    constexpr int max = 1024 * 10;
+    int arr[max];
+
+    std::random_device seed;    // 硬件生成随机数种子
+    std::ranlux48 engine(seed());   // 利用种子生成随机数引擎
+    std::uniform_int_distribution<> distrib(min, max);
+    for (int i = 0; i < max; i++) {
+        arr[i] = distrib(engine);   // 随机数
+    }
+
+    mystd::TimeCount::test("ArrayList增删", [arr]{
+        mystd::ArrayList<int> array;
+        for (int i = 0; i < max; i++) {
+            array.push_back(arr[i]);
+        }
+
+        for (int i = 0; i < max; i++) {
+            array.pop_back();
+        }
+    });
+
+    mystd::TimeCount::test("LinkedList增删", [arr]{
+        mystd::LinkedList<int> list;
+        for (int i = 0; i < max; i++) {
+            list.push_back(arr[i]);
+        }
+
+        for (int i = 0; i < max; i++) {
+            list.pop_back();
+        }
+    });
+
+    mystd::TimeCount::test("RBTree增删", [arr]{
+        mystd::RBTree<int> rbtree;
+        for (int i = 0; i < max; i++) {
+            rbtree.add(arr[i]);
+        }
+
+        for (int i = 0; i < max; i++) {
+            rbtree.remove(arr[i]);
+        }
+    });
+
+    mystd::TimeCount::test("ArrayList查询", [arr]{
+        mystd::ArrayList<int> array;
+        for (int i = 0; i < max; i++) {
+            array.push_back(arr[i]);
+        }
+
+        for (int i = 0; i < max; i++) {
+            array.contains(arr[i]);
+        }
+    });
+
+    mystd::TimeCount::test("LinkedList查询", [arr]{
+        mystd::LinkedList<int> list;
+        for (int i = 0; i < max; i++) {
+            list.push_back(arr[i]);
+        }
+
+        for (int i = 0; i < max; i++) {
+            list.contains(arr[i]);
+        }
+    });
+
+    mystd::TimeCount::test("RBTree查询", [arr]{
+        mystd::RBTree<int> rbtree;
+        for (int i = 0; i < max; i++) {
+            rbtree.add(arr[i]);
+        }
+
+        for (int i = 0; i < max; i++) {
+            rbtree.contains(arr[i]);
+        }
+    });
 }

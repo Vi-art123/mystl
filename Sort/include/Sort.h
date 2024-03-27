@@ -9,6 +9,12 @@
 
 namespace mystd
 {
+    enum SortOrder
+    {
+        ASC = true,
+        DESC = false
+    };
+
     class Sort
     {
     public:
@@ -23,6 +29,7 @@ namespace mystd
 
         [[nodiscard]] int getCountCompare() const noexcept { return countCompare; }
         [[nodiscard]] int getSwapCount() const noexcept { return swapCount; }
+        void setOrder(SortOrder order) { _order = order; }
 
         void to_string() const;
 
@@ -30,7 +37,7 @@ namespace mystd
         int compare(int v1, int v2) noexcept
         {
             countCompare++;
-            return v1 - v2;
+            return (_order == ASC) ? v1 - v2 : v2 - v1;
         }
 
         void swap(int& v1, int& v2) noexcept
@@ -44,8 +51,9 @@ namespace mystd
         int64_t timeCount = 0;
         int *m_arr = nullptr;
     private:
-        int countCompare = 0;
-        int swapCount = 0;
+        uint64_t countCompare = 0;
+        uint64_t swapCount = 0;
         std::string sort_name;
+        SortOrder _order = ASC;
     };
 }

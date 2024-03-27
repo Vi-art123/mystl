@@ -18,6 +18,7 @@ namespace mystd
     void Sort::to_string() const
     {
         std::cout << "【" + sort_name + "】" << std::endl;
+#if 0
         std::cout << "size=" << m_size << ", ";
         std::cout << "{";
         for (int i = 0; i < m_size; i++) {
@@ -27,7 +28,10 @@ namespace mystd
         }
         std::cout << "}";
         std::cout << std::endl;
-        std::cout << "compare:" << getCountCompare() << ", swap:" << getSwapCount() << std::endl;
-        std::cout << "耗时：" << std::fixed << timeCount/1000000.0 << " s" << std::endl;
+#endif
+        std::cout << "耗时：" << std::fixed << timeCount/1000000.0 << " s    ";
+        std::cout << "比较：" << getCountCompare() << "    ";
+        std::cout << "交换：" << getSwapCount() << std::endl;
+        std::cout << "--------------------------------------------------------------" << std::endl;
     }
 }
