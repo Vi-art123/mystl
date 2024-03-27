@@ -6,6 +6,7 @@
 
 #include <utility>
 #include <string>
+#include <cstdint>
 
 namespace mystd
 {
@@ -27,9 +28,12 @@ namespace mystd
 
         virtual void sort() = 0;
 
-        [[nodiscard]] int getCountCompare() const noexcept { return countCompare; }
-        [[nodiscard]] int getSwapCount() const noexcept { return swapCount; }
+        [[nodiscard]] uint64_t getCountCompare() const noexcept { return countCompare; }
+        [[nodiscard]] uint64_t getSwapCount() const noexcept { return swapCount; }
+        [[nodiscard]] int64_t getTimeCount() const noexcept { return timeCount; }
         void setOrder(SortOrder order) { _order = order; }
+        std::string getSortName() { return sort_name; }
+        [[nodiscard]] bool is_ordered() const;
 
         void to_string() const;
 
