@@ -4,4 +4,5 @@
 //
 #pragma once
 
+void testTime();
 void testSort();

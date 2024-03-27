@@ -16,6 +16,7 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin/)
 
 # 添加头文件搜索路径
 include_directories(${PROJECT_SOURCE_DIR}/test)
+include_directories(${PROJECT_SOURCE_DIR}/Time)
 include_directories(${PROJECT_SOURCE_DIR}/BinaryTree)
 include_directories(${PROJECT_SOURCE_DIR}/List)
 include_directories(${PROJECT_SOURCE_DIR}/ArrayList)
@@ -30,6 +31,7 @@ include_directories(${PROJECT_SOURCE_DIR}/Sort)
 
 aux_source_directory(./     SRC_FILES)
 aux_source_directory(./test SRC_FILES)
+aux_source_directory(./Time SRC_FILES)
 
 # 添加一个可执行文件
 add_executable(mystl ${SRC_FILES})

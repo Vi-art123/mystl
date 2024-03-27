@@ -4,30 +4,35 @@
 //
 
 #include "test_algorithm.h"
-#include <iostream>
 #include <BubbleSort.h>
 #include <SelectSort.h>
+#include <HeapSort.h>
+#include <thread>
 
-static void printArr(int arr[], int len)
-{
-    std::cout << "size=" << len << ", ";
-    std::cout << "{";
-    for (int i = 0; i < len; i++) {
-        if (i != 0)
-            std::cout << ", ";
-        std::cout << arr[i];
-    }
-    std::cout << "}";
-    std::cout << std::endl;
-}
 
 void testSort()
 {
-//    mystd::BubbleSort st;
-    mystd::SelectSort st;
-    int arr[] = {7, 9, 4, 2, 5, 8, 11, 1, 3, 10, 12};
+    int arr[] = {7, 9, 4, 2, 5, 8, 11, 1, 3, 10, 12, 9};
     int len = sizeof arr/sizeof arr[0];
-    st.sort(arr, len);
-    printArr(arr, len);
-    std::cout << st.getCountCompare() << std::endl;
+
+    std::cout << "--------------------------------------------------------------" << std::endl;
+    mystd::BubbleSort bubble(arr, len);
+    bubble.sort();
+    bubble.to_string();
+    std::cout << "--------------------------------------------------------------" << std::endl;
+
+    mystd::SelectSort select(arr, len);
+    select.sort();
+    select.to_string();
+    std::cout << "--------------------------------------------------------------" << std::endl;
+
+    mystd::HeapSort heap(arr, len);
+    heap.sort();
+    heap.to_string();
+    std::cout << "--------------------------------------------------------------" << std::endl;
+}
+
+void testTime()
+{
+    mystd::TimeCount::test("testTime", []{std::this_thread::sleep_for(std::chrono::milliseconds(500));});
 }
