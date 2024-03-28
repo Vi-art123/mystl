@@ -8,6 +8,8 @@
 #include <SelectSort.h>
 #include <HeapSort.h>
 #include <InsertionSort.h>
+#include <MergeSort.h>
+#include <QuickSort.h>
 #include <thread>
 #include <iostream>
 #include <random>
@@ -37,7 +39,7 @@ static void testSort(std::vector<std::shared_ptr<mystd::Sort>>& sorts)
 
 void testSort()
 {
-    constexpr int min = 0;
+    constexpr int min = 1;
     constexpr int max = 10000;
     int arr[max] = {0};
 
@@ -50,10 +52,12 @@ void testSort()
     int len = max;
 
     std::vector<std::shared_ptr<mystd::Sort>> sorts;
-    sorts.emplace_back(std::make_shared<mystd::SelectSort>(arr, len));
-    sorts.emplace_back(std::make_shared<mystd::BubbleSort>(arr, len));
+//    sorts.emplace_back(std::make_shared<mystd::SelectSort>(arr, len));
+//    sorts.emplace_back(std::make_shared<mystd::BubbleSort>(arr, len));
+//    sorts.emplace_back(std::make_shared<mystd::InsertionSort>(arr, len));
     sorts.emplace_back(std::make_shared<mystd::HeapSort>(arr, len));
-    sorts.emplace_back(std::make_shared<mystd::InsertionSort>(arr, len));
+    sorts.emplace_back(std::make_shared<mystd::MergeSort>(arr, len));
+    sorts.emplace_back(std::make_shared<mystd::QuickSort>(arr, len));
     testSort(sorts);
 }
 

@@ -17,5 +17,8 @@ namespace mystd
     private:
         void sort(int begin, int end);
         void merge(int begin, int mid, int end);
+
+    private:
+        std::unique_ptr<int[]> left_arr;
     };
 }

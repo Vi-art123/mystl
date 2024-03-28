@@ -4,9 +4,7 @@
 //
 #pragma once
 
-#include <utility>
-#include <string>
-#include <cstdint>
+#include <memory>
 
 namespace mystd
 {
@@ -19,10 +17,10 @@ namespace mystd
     class Sort
     {
     public:
-        Sort(int *arr, int size, const std::string& s_name = "null");
+        Sort(int *arr, int size, std::string  s_name = "null");
         Sort(const Sort&) = delete;
         Sort(Sort&&) = delete;
-        virtual ~Sort() { delete[] m_arr; }
+        virtual ~Sort() = default;
 
         Sort& operator=(const Sort&) = delete;
 
@@ -53,7 +51,7 @@ namespace mystd
     protected:
         int m_size = 0;
         int64_t timeCount = 0;
-        int *m_arr = nullptr;
+        std::unique_ptr<int[]> m_arr;
     private:
         uint64_t countCompare = 0;
         uint64_t swapCount = 0;

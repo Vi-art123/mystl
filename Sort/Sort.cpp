@@ -3,19 +3,17 @@
 // 排序算法基类
 //
 
-#include <Sort.h>
-#include <cstring>
+#include "Sort.h"
 #include <iostream>
-#include <utility>
 #include <vector>
 #include <algorithm>
 
 namespace mystd
 {
-    Sort::Sort(int *arr, int size, const std::string& s_name) : m_size(size), sort_name(std::move(s_name))
+    Sort::Sort(int *arr, int size, std::string s_name) : m_size(size), sort_name(std::move(s_name))
     {
-        m_arr = new int[m_size];
-        memcpy(m_arr, arr, sizeof(int) * m_size);
+        m_arr = std::make_unique<int[]>(m_size);
+        memcpy(m_arr.get(), arr, sizeof(int) * m_size);
     }
 
     void Sort::to_string() const
@@ -41,7 +39,7 @@ namespace mystd
 
     inline bool Sort::is_ordered() const
     {
-        std::vector<int> test_vec(m_arr, m_arr + m_size);
+        std::vector<int> test_vec(m_arr.get(), m_arr.get() + m_size);
         return std::is_sorted(test_vec.begin(), test_vec.end());
     }
 }
