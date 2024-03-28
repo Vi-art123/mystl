@@ -14,7 +14,7 @@
 #include <TimeCount.h>
 
 
-void testSort(std::vector<std::shared_ptr<mystd::Sort>>& sorts)
+static void testSort(std::vector<std::shared_ptr<mystd::Sort>>& sorts)
 {
     if (sorts.empty()) {
         return;

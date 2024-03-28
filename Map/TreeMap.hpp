@@ -18,7 +18,7 @@ namespace mystd
             K key;
             V value;
 
-            RBColor color = RED;    // 默认为红色，这样能够让红黑树的性质尽快满足（性质1，2，3，5都满足，性质4不一定）
+            RBColor color = RBColor::RED;    // 默认为红色，这样能够让红黑树的性质尽快满足（性质1，2，3，5都满足，性质4不一定）
 
             std::weak_ptr<TMNode> parent;
             std::shared_ptr<TMNode> left;
@@ -105,11 +105,11 @@ namespace mystd
         std::shared_ptr<TMNode> get_node(const K& key) const;
         std::shared_ptr<TMNode> predecessor(std::shared_ptr<TMNode> node);
         std::shared_ptr<TMNode> make_color(std::shared_ptr<TMNode> node, RBColor color);
-        std::shared_ptr<TMNode> make_red(std::shared_ptr<TMNode> node) { return make_color(node, RED); }
-        std::shared_ptr<TMNode> make_black(std::shared_ptr<TMNode> node) { return make_color(node, BLACK); }
+        std::shared_ptr<TMNode> make_red(std::shared_ptr<TMNode> node) { return make_color(node, RBColor::RED); }
+        std::shared_ptr<TMNode> make_black(std::shared_ptr<TMNode> node) { return make_color(node, RBColor::BLACK); }
 
-        bool isRed(std::shared_ptr<TMNode> node) const noexcept { return colorOf(node) == RED; }
-        bool isBlack(std::shared_ptr<TMNode> node) const noexcept { return colorOf(node) == BLACK; }
+        bool isRed(std::shared_ptr<TMNode> node) const noexcept { return colorOf(node) == RBColor::RED; }
+        bool isBlack(std::shared_ptr<TMNode> node) const noexcept { return colorOf(node) == RBColor::BLACK; }
         void remove(std::shared_ptr<TMNode> node);
         void afterAdd(std::shared_ptr<TMNode> node);
         void afterRemove(std::shared_ptr<TMNode> node);
@@ -123,7 +123,7 @@ namespace mystd
         RBColor colorOf(std::shared_ptr<TMNode> node) const noexcept
         {
             // 空节点为黑色
-            return node == nullptr ? BLACK : node->color;
+            return node == nullptr ? RBColor::BLACK : node->color;
         }
 
         int compare(const K& k1, const K& k2) const

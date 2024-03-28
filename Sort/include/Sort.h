@@ -10,7 +10,7 @@
 
 namespace mystd
 {
-    enum SortOrder
+    enum class SortOrder : bool
     {
         ASC = true,
         DESC = false
@@ -19,7 +19,7 @@ namespace mystd
     class Sort
     {
     public:
-        Sort(int *arr, int size, std::string s_name = "null");
+        Sort(int *arr, int size, const std::string& s_name = "null");
         Sort(const Sort&) = delete;
         Sort(Sort&&) = delete;
         virtual ~Sort() { delete[] m_arr; }
@@ -41,7 +41,7 @@ namespace mystd
         int compare(int v1, int v2) noexcept
         {
             countCompare++;
-            return (_order == ASC) ? v1 - v2 : v2 - v1;
+            return (_order == SortOrder::ASC) ? v1 - v2 : v2 - v1;
         }
 
         void swap(int& v1, int& v2) noexcept
@@ -58,6 +58,6 @@ namespace mystd
         uint64_t countCompare = 0;
         uint64_t swapCount = 0;
         std::string sort_name;
-        SortOrder _order = ASC;
+        SortOrder _order = SortOrder::ASC;
     };
 }

@@ -8,16 +8,16 @@
 
 namespace mystd
 {
-    enum RBColor
+    enum class RBColor : bool
     {
-        RED,
-        BLACK
+        RED = false,
+        BLACK = true
     };
 
     template<typename T>
     struct RBNode : public TreeNode<T>
     {
-        RBColor color = RED;    // 默认为红色，这样能够让红黑树的性质尽快满足（性质1，2，3，5都满足，性质4不一定）
+        RBColor color = RBColor::RED;    // 默认为红色，这样能够让红黑树的性质尽快满足（性质1，2，3，5都满足，性质4不一定）
 
         RBNode(const T& val, std::weak_ptr<TreeNode<T>> p) : TreeNode<T>(val, p) {}
 
@@ -33,7 +33,7 @@ namespace mystd
             str.push_back(')');
 
             str.append("_c(");
-            std::string color_str = color == RED ? "red" : "black";
+            std::string color_str = color == RBColor::RED ? "red" : "black";
             str.append(color_str);
             str.push_back(')');
             return str;
@@ -52,17 +52,17 @@ namespace mystd
         void afterAdd(std::shared_ptr<TreeNode<T>> node) override;
         void afterRemove(std::shared_ptr<TreeNode<T>> node) override;
         std::shared_ptr<TreeNode<T>> make_color(std::shared_ptr<TreeNode<T>> node, RBColor color);
-        std::shared_ptr<TreeNode<T>> make_red(std::shared_ptr<TreeNode<T>> node) { return make_color(node, RED); }
-        std::shared_ptr<TreeNode<T>> make_black(std::shared_ptr<TreeNode<T>> node) { return make_color(node, BLACK); }
+        std::shared_ptr<TreeNode<T>> make_red(std::shared_ptr<TreeNode<T>> node) { return make_color(node, RBColor::RED); }
+        std::shared_ptr<TreeNode<T>> make_black(std::shared_ptr<TreeNode<T>> node) { return make_color(node, RBColor::BLACK); }
 
         RBColor colorOf(std::shared_ptr<TreeNode<T>> node) const noexcept
         {
             // 空节点为黑色
-            return node == nullptr ? BLACK : std::dynamic_pointer_cast<RBNode<T>>(node)->color;
+            return node == nullptr ? RBColor::BLACK : std::dynamic_pointer_cast<RBNode<T>>(node)->color;
         }
 
-        bool isRed(std::shared_ptr<TreeNode<T>> node) const noexcept { return colorOf(node) == RED; }
-        bool isBlack(std::shared_ptr<TreeNode<T>> node) const noexcept { return colorOf(node) == BLACK; }
+        bool isRed(std::shared_ptr<TreeNode<T>> node) const noexcept { return colorOf(node) == RBColor::RED; }
+        bool isBlack(std::shared_ptr<TreeNode<T>> node) const noexcept { return colorOf(node) == RBColor::BLACK; }
     };
 
     /**

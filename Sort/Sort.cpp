@@ -12,7 +12,7 @@
 
 namespace mystd
 {
-    Sort::Sort(int *arr, int size, std::string s_name) : m_size(size), sort_name(std::move(s_name))
+    Sort::Sort(int *arr, int size, const std::string& s_name) : m_size(size), sort_name(std::move(s_name))
     {
         m_arr = new int[m_size];
         memcpy(m_arr, arr, sizeof(int) * m_size);
